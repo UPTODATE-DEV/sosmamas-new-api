@@ -22,7 +22,7 @@ module.exports = ({
         return models.Post.findone({ where: { id: id } })
     },
     async posts(root, args, { models }) {
-        return models.Symptome.findAll()
+        return models.Post.findAll()
     },
     async category(root, { id }, { models }) {
         return models.PostCategory.findOne({ where: { id: id } })
@@ -33,7 +33,10 @@ module.exports = ({
         }
         return models.PostCategory.findAll()
     },
-    async comments(root, { postId }, { models }) {
+    async comments(root, { postId }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Comment.findAll({ where: { postId: postId } })
     },
 

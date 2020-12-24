@@ -48,7 +48,7 @@ const typeDefs = gql`
   type Comment {
     id: ID!
     content: String!
-    Post: Post!
+    post: Post!
   }
 
   type Query {
@@ -101,9 +101,9 @@ const typeDefs = gql`
     }
 
     type Subscription {
-        newPeriode(periodeId: Int): Periode
+        newPeriode(periodeId: ID): Periode
         newPost: Post
-        newComment: Comment
+        newComment(postId: ID!): Comment
     }
 `;
 
