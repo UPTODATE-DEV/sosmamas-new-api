@@ -59,21 +59,50 @@ const resolvers = {
         }
     },
     Post: {
+        async author(root, _, { user, models }) {
+            // if (!user) {
+            //     throw new Error('Unauthenticated!');
+            // }
+            return models.User.findByPk(root.authorId)
+        },
         async category(root, _, { models }) {
             return models.PostCategory.findOne({ where: { id: root.categoryId } })
         },
         async comments(root, _, { models }) {
             return models.Comment.findAll({ where: { postId: root.id } })
-        }
+        },
+        async commentCount(root, _, { models }) {
+            return models.Comment.count({ where: { postId: root.id } })
+        },
+        async likesCount(root, _, { models }) {
+            return models.Like.count({ where: { resourceId: root.id } })
+        },
+        // async authCount(root, _, { models }) {
+        //     return models.Like.count({ where: { resourceId: root.id } })
+        // },
     },
     Comment: {
         async post(root, _, { models }) {
-            return models.Post.findOne({ where: { id: root.postId } })
-        }
+            return models.Post.findByPk(root.postId)
+        },
+        async user(root, _, { user, models }) {
+            // if (!user) {
+            //     throw new Error('Unauthenticated!');
+            // }
+            return models.User.findByPk(root.userId)
+        },
     },
     PostCategory: {
-        async posts(root, args, { models }) {
+        async posts(root, args, { user, models }) {
             return models.Post.findAll({ where: { categoryId: root.id } })
+        },
+    },
+    User: {
+        async profile(root, args, { user, models }) {
+            // if (!user) {
+            //     throw new Error('Unauthenticated!');
+            // }
+            return models.Profile.findOne({ where: { userId: root.id } })
         },
     },
 };

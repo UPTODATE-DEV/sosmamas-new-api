@@ -9,10 +9,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      content: {
-        type: Sequelize.STRING
+      body: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       categoryId: {
         type: Sequelize.STRING,
@@ -21,6 +23,15 @@ module.exports = {
           model: 'PostCategories', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
+      },
+      authorId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,

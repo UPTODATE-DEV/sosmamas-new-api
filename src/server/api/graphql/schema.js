@@ -9,14 +9,24 @@ const typeDefs = gql`
   }
   type User {
     id: ID!
-    username: String!
-    email: String!
     password: String!
+    phone: String!
+    profile: Profile
   }
   type AuthData {
     userId: ID!
     token: String!
     tokenExpiration: Int!
+  }
+
+  type Profile{
+    id: ID
+    name: String
+    lastName: String
+    avatar: String
+    sex: String
+    address: String
+    phone: String
   }
 
   type Conseil {
@@ -40,15 +50,20 @@ const typeDefs = gql`
   type Post {
     id: ID!
     title: String!
-    content: String!
+    body: String!
+    author: User!
     category: PostCategory!
     comments: [Comment!]!
+    commentCount: Int!
+    likesCount: Int!
+    # authCount: Int
   }
 
   type Comment {
     id: ID!
     content: String!
     post: Post!
+    user: User!
   }
 
   type Query {
@@ -83,21 +98,29 @@ const typeDefs = gql`
         createPost(
           categoryId: String!
           title: String!
-          content: String!
+          body: String!
         ): Post!
         createComment(
           postId: String!
           content: String!
         ): Comment!
         createUser(
-          username: String!
-          email: String!
+          phone: String!
           password: String!
         ): User!
         login(
-          email: String!
+          phone: String!
           password: String!
         ): AuthData!
+        profile(
+          userId: String!
+          name: String
+          lastName: String
+          sex: String
+          avatar: String
+          phone: String
+          address: String
+        ): Profile!
     }
 
     type Subscription {

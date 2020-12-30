@@ -8,14 +8,30 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.STRING
       },
-      email: {
-        type: Sequelize.STRING
+      phone: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+        notEmpty: true,
+        // is: {
+        //   args: ["^[0-9]+$", "+"],
+        //   msg: "Le champ phone doit contenir des valeur numeric"
+        // }
       },
       username: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING
+      },
+      isVerified: {
+        type: Sequelize.BOOLEAN
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        defaultValue: 1
       },
       createdAt: {
         allowNull: false,

@@ -1,32 +1,42 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Comments', {
+    await queryInterface.createTable('Profiles', {
       id: {
         allowNull: false,
-        // autoIncrement: true,
+        autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      firstName: {
         type: Sequelize.STRING
       },
-      content: {
+      lastName: {
         type: Sequelize.STRING
+      },
+      name: {
+        type: Sequelize.STRING
+      },
+      gender: {
+        type: Sequelize.STRING,
+        isIn: {
+          args: ['M', 'F'],
+          msg: "Le champ sexe doit être M ou F"
+        },
       },
       userId: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      postId: {
-        type: Sequelize.STRING,
-        allowNull: false,
         references: {
-          model: 'Posts', // name of Target model
+          model: 'Users', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
       },
-      status: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: 1
+      avatar: {
+        type: Sequelize.STRING
+      },
+      address: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -39,6 +49,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Comments');
+    await queryInterface.dropTable('Profiles');
   }
 };

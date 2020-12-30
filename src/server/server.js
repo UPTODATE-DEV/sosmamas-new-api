@@ -24,7 +24,8 @@ const server = new ApolloServer({
     if (!req) {
       return { user: null, models }
     }
-    const token = req.get('Authorization') || ''
+    
+    const token = req.get('authorization') || ''
     return { user: getUser(token.split(' ')[1]), models }
   },
   // introspection: true,

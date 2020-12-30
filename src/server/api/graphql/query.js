@@ -1,42 +1,69 @@
 
 module.exports = ({
-    async periode(root, { id }, { models }) {
+    async periode(root, { id }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Periode.findOne({ where: { id: id } })
     },
-    async allPeriodes(root, args, { models }) {
+    async allPeriodes(root, args, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Periode.findAll()
     },
-    async conseil(root, { id }, { models }) {
+    async conseil(root, { id }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Conseil.findOne({ where: { id: id } })
     },
-    async allConseil(root, args, { models }) {
+    async allConseil(_, args, { models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Conseil.findAll()
     },
-    async symptome(root, { id }, { models }) {
+    async symptome(_, { id }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Symptome.findOne({ where: { id: id } })
     },
-    async allSymptome(root, args, { models }) {
+    async allSymptome(root, args, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Post.findAll()
     },
-    async post(root, { id }, { models }) {
+    async post(_, { id }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Post.findone({ where: { id: id } })
     },
-    async posts(root, args, { models }) {
+    async posts(_, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Post.findAll()
     },
-    async category(root, { id }, { models }) {
+    async category(_, { id }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.PostCategory.findOne({ where: { id: id } })
     },
-    async categories(root, args, { user, models }) {
+    async categories(_, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
         return models.PostCategory.findAll()
     },
-    async comments(root, { postId }, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+    async comments(_, { postId }, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Comment.findAll({ where: { postId: postId } })
     },
 
