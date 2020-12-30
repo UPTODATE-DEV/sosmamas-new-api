@@ -65,8 +65,8 @@ const resolvers = {
             // }
             return models.User.findByPk(root.authorId)
         },
-        async category(root, _, { models }) {
-            return models.PostCategory.findOne({ where: { id: root.categoryId } })
+        async tag(root, _, { models }) {
+            return models.PostTag.findOne({ where: { id: root.tagId } })
         },
         async comments(root, _, { models }) {
             return models.Comment.findAll({ where: { postId: root.id } })
@@ -76,6 +76,15 @@ const resolvers = {
         },
         async likesCount(root, _, { models }) {
             return models.Like.count({ where: { resourceId: root.id } })
+        },
+        async isLiked(root, _, { user, models }) {
+            const isRessourceLiked = await models.Like.count({
+                where: {
+                    userId: user.userId,
+                    resourceId: root.id
+                }
+            });
+            return isRessourceLiked === 1;
         },
         // async authCount(root, _, { models }) {
         //     return models.Like.count({ where: { resourceId: root.id } })
@@ -92,9 +101,9 @@ const resolvers = {
             return models.User.findByPk(root.userId)
         },
     },
-    PostCategory: {
+    PostTag: {
         async posts(root, args, { user, models }) {
-            return models.Post.findAll({ where: { categoryId: root.id } })
+            return models.Post.findAll({ where: { tagId: root.id } })
         },
     },
     User: {

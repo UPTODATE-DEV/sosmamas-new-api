@@ -16,11 +16,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      categoryId: {
+      tagId: {
         type: Sequelize.STRING,
         allowNull: false,
         references: {
-          model: 'PostCategories', // name of Target model
+          model: 'PostTags', // name of Target model
           key: 'id', // key in Target model that we're referencing
         },
       },

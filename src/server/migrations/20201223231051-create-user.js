@@ -26,10 +26,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       isVerified: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: 0
       },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: 1
       },

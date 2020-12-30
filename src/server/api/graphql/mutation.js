@@ -25,17 +25,17 @@ module.exports = ({
         }
         return models.Symptome.create({ title: title, name: name, periodeId: periodeId });
     },
-    async createPostCategory(_, { name }, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
-        return models.PostCategory.create({ id: uniqid(''), name: name });
+    async createPostTag(_, { name }, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        return models.PostTag.create({ id: uniqid(''), name: name });
     },
-    async createPost(_, { title, body, categoryId }, { user, models }) {
+    async createPost(_, { title, body, tagId }, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        let newPost = models.Post.create({ id: uniqid(''), title: title, body: body, categoryId: categoryId, authorId: user.userId });
+        let newPost = models.Post.create({ id: uniqid(''), title: title, body: body, tagId: tagId, authorId: user.userId });
         pubsub.publish(NEW_POST, { newPost });
         return newPost;
     },
@@ -67,17 +67,17 @@ module.exports = ({
             }
         });
     },
-    async createUser(_, { phone, password }, { models }) {
+    async createUser(_, args, { models }) {
 
-        const existingUser = await models.User.findOne({ where: { phone: phone } });
+        const existingUser = await models.User.findOne({ where: { phone: args.phone } });
         if (existingUser) {
             throw new Error('User exists already.');
         }
-        const hashedPassword = await bcrypt.hash(password, 12);
+        const hashedPassword = await bcrypt.hash(args.password, 12);
 
         const user = models.User.create({
             id: uniqid(''),
-            phone: phone,
+            phone: args.phone,
             password: hashedPassword
         });
 

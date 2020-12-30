@@ -40,7 +40,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.Post.findone({ where: { id: id } })
+        return models.Post.findOne({ where: { id: id } })
     },
     async posts(_, args, { user, models }) {
         // if (!user) {
@@ -48,17 +48,17 @@ module.exports = ({
         // }
         return models.Post.findAll()
     },
-    async category(_, { id }, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
-        return models.PostCategory.findOne({ where: { id: id } })
+    async tag(_, { id }, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        return models.PostTag.findOne({ where: { id: id } })
     },
-    async categories(_, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
-        return models.PostCategory.findAll()
+    async tags(_, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        return models.PostTag.findAll()
     },
     async comments(_, { postId }, { user, models }) {
         // if (!user) {

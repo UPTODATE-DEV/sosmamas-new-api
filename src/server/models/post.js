@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Post.belongsTo(models.PostCategory, {
+      Post.belongsTo(models.PostTag, {
         onDelete: 'cascade',
       });
       Post.hasOne(models.User, {
@@ -28,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    categoryId: {
+    tagId: {
       type: DataTypes.STRING,
-      field: 'categoryId',
+      field: 'tagId',
       allowNull: false
     },
     authorId: {

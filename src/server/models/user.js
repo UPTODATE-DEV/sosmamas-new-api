@@ -29,11 +29,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     username: {
       type:DataTypes.STRING,
-      defaultValue: 'sos-user'+this.phone
+      // defaultValue: 'sos-user'+this.phone
     },
     isVerified: {
       type:DataTypes.BOOLEAN,
-      defaultValue: 'sos-user'+this.phone
+      defaultValue: 0
     },
     status: {
       type: DataTypes.BOOLEAN

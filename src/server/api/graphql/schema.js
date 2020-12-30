@@ -9,7 +9,9 @@ const typeDefs = gql`
   }
   type User {
     id: ID!
+    username: String 
     password: String!
+    isVerified: Boolean!
     phone: String!
     profile: Profile
   }
@@ -21,12 +23,12 @@ const typeDefs = gql`
 
   type Profile{
     id: ID
-    name: String
+    firstName: String
     lastName: String
+    name: String
     avatar: String
-    sex: String
+    gender: String
     address: String
-    phone: String
   }
 
   type Conseil {
@@ -41,7 +43,7 @@ const typeDefs = gql`
     periode: Periode!
   }
 
-  type PostCategory {
+  type PostTag {
     id: ID!
     name: String!
     posts: [Post!]!
@@ -51,8 +53,10 @@ const typeDefs = gql`
     id: ID!
     title: String!
     body: String!
+    status: Boolean!
     author: User!
-    category: PostCategory!
+    isLiked: Boolean!
+    tag: PostTag!
     comments: [Comment!]!
     commentCount: Int!
     likesCount: Int!
@@ -62,6 +66,7 @@ const typeDefs = gql`
   type Comment {
     id: ID!
     content: String!
+    status: Boolean!
     post: Post!
     user: User!
   }
@@ -75,8 +80,8 @@ const typeDefs = gql`
     allSymptome: [Symptome!]!
     posts: [Post!]!
     post(id: ID!): Post!
-    categories: [PostCategory!]!
-    category(id: ID!): PostCategory!
+    tags: [PostTag!]!
+    tag(id: ID!): PostTag!
     comments(postId: ID!): [Comment!]!
   }
 
@@ -92,11 +97,11 @@ const typeDefs = gql`
           title: String!
           name: String!
         ): Symptome!
-        createPostCategory(
+        createPostTag(
           name: String!
-        ): PostCategory!
+        ): PostTag!
         createPost(
-          categoryId: String!
+          tagId: String!
           title: String!
           body: String!
         ): Post!
@@ -114,11 +119,11 @@ const typeDefs = gql`
         ): AuthData!
         profile(
           userId: String!
-          name: String
+          firstName: String
           lastName: String
-          sex: String
+          name: String
+          gender: String
           avatar: String
-          phone: String
           address: String
         ): Profile!
     }
