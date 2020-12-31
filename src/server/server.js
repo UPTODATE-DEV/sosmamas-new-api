@@ -1,5 +1,9 @@
+const { ApolloServer } = require('apollo-server-express');
+const express = require('express');
+const cors = require('cors')
+const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken')
-const { ApolloServer } = require('apollo-server');
+require('dotenv').config();
 const typeDefs = require('./api/graphql/schema');
 const resolvers = require('./api/graphql/resolvers');
 const models = require('./models/index');
@@ -9,7 +13,7 @@ const port = 4000;
 const getUser = token => {
   try {
     if (token) {
-      return jwt.verify(token, 'somesupersecretkey')
+      return jwt.verify(token, process.env.ACCESS_TOKEN)
     }
     return null
   } catch (error) {
@@ -32,6 +36,13 @@ const server = new ApolloServer({
   // playground: true
 });
 
-server.listen({ port }).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+const app = express()
+server.applyMiddleware({ app })
+
+app.use(express.static('public'))
+app.use(cors())
+app.use(bodyParser.json());
+
+app.listen({ port: port }, (url) => {
+  console.log(`🚀  Server ready at http://localhost:4000/graphql`);
 });

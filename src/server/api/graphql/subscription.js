@@ -1,4 +1,4 @@
-const { withFilter } = require('apollo-server');
+const { withFilter } = require('apollo-server-express');
 const { NEW_PERIODE } = require('./constants');
 module.exports = () => ({
     newPeriode:

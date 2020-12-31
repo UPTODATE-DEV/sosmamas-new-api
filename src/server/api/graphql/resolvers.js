@@ -1,4 +1,4 @@
-const { withFilter } = require('apollo-server');
+const { withFilter } = require('apollo-server-express');
 // const subscription = require('./subscription');
 const mutation = require('./mutation');
 const query = require('./query');

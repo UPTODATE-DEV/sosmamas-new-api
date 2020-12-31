@@ -1,8 +1,11 @@
+require('dotenv').config();
 const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
 var uniqid = require('uniqid');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { where } = require('sequelize');
+const path = require('path');
+const fs = require('fs');
 
 module.exports = ({
     async createPeriode(_, { name }, { user, models }) {
@@ -94,7 +97,7 @@ module.exports = ({
             }
             const token = jwt.sign(
                 { userId: user.id, phone: user.phone },
-                'somesupersecretkey',
+                process.env.ACCESS_TOKEN,
                 {
                     expiresIn: '1h'
                 }
@@ -102,5 +105,18 @@ module.exports = ({
             return { userId: user.id, token: token, tokenExpiration: 1 };
         }
         throw new Error('User doesn\'t exist!');
+    },
+    async uploadFile(_, { file }, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
+        const {createReadStream, filename, mimetype, encoding} = await file;
+        const stream = createReadStream();
+        const pathName = path.basename.apply.join(__dirname, `/public/storage/images/$fileName`);
+        await stream.pipe(fs.createWriteStream(pathName));
+
+        return {
+            url: `http://localhost:4000/images/$fileName`
+        };
     },
 })

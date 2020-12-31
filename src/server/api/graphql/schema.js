@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   type Periode {
@@ -71,6 +71,12 @@ const typeDefs = gql`
     user: User!
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
+
   type Query {
     periode(id: ID!): Periode
     allPeriodes: [Periode!]!
@@ -126,6 +132,7 @@ const typeDefs = gql`
           avatar: String
           address: String
         ): Profile!
+        uploadFile(file: Upload!): File
     }
 
     type Subscription {
