@@ -1,5 +1,16 @@
 
 module.exports = ({
+    async user(root, { id }, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        const data = models.User.findOne({ where: { id: id } });
+        if (data) {
+            return data;
+        } else {
+            return null;
+        }
+    },
     async periode(root, { id }, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');

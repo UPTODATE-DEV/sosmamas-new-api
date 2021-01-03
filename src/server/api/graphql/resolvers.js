@@ -78,16 +78,24 @@ const resolvers = {
             return models.Like.count({ where: { resourceId: root.id } })
         },
         async isLiked(root, _, { user, models }) {
+            
             const isRessourceLiked = await models.Like.count({
                 where: {
-                    userId: user.userId,
+                    userId: user ? user.userId : "",
                     resourceId: root.id
                 }
             });
             return isRessourceLiked === 1;
         },
-        // async authCount(root, _, { models }) {
-        //     return models.Like.count({ where: { resourceId: root.id } })
+        // async likeVerifiedCount(root, _, { user, models }) {
+            
+        //     const isverifiedLikedCount = await models.Like.count({
+        //         include:[{
+        //             model: models.User,
+        //             where: { isVerified: true }
+        //         }]
+        //     });
+        //     return isverifiedLikedCount;
         // },
     },
     Comment: {

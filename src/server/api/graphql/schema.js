@@ -53,14 +53,14 @@ const typeDefs = gql`
     id: ID!
     title: String!
     body: String!
-    status: Boolean!
+    status: Int!
     author: User!
     isLiked: Boolean!
     tag: PostTag!
     comments: [Comment!]!
     commentCount: Int!
     likesCount: Int!
-    # authCount: Int
+    # likeVerifiedCount: Int!
   }
 
   type Comment {
@@ -78,6 +78,8 @@ const typeDefs = gql`
   }
 
   type Query {
+    users: [User!]
+    user(id: ID!): User
     periode(id: ID!): Periode
     allPeriodes: [Periode!]!
     conseil(id: ID!): Conseil!
