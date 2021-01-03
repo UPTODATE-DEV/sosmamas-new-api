@@ -110,13 +110,15 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        const {createReadStream, filename, mimetype, encoding} = await file;
+        // const {createReadStream, filename, mimetype, encoding} = await file;
+        const {createReadStream, filename} = await file;
         const stream = createReadStream();
-        const pathName = path.basename.apply.join(__dirname, `/public/storage/images/$fileName`);
+        const pathName = path.basename.apply.join(__dirname, `/public/storage/images/${filename}`);
         await stream.pipe(fs.createWriteStream(pathName));
 
         return {
-            url: `http://localhost:4000/images/$fileName`
+            url: `http://localhost:4000/images/$fileName`,
+            path: `${pathName}`
         };
     },
 })
