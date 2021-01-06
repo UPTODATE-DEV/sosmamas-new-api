@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Post.hasMany(models.Comment);
     }
-  };
+  }
   Post.init({
     title: DataTypes.STRING,
     body: {
@@ -38,7 +38,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     status: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
   }, {
     sequelize,

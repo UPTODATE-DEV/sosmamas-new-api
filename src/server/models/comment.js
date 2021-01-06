@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       });
     }
-  };
+  }
   Comment.init({
     content: DataTypes.STRING,
     userId: {
@@ -35,8 +35,14 @@ module.exports = (sequelize, DataTypes) => {
       field: 'postId',
     },
     status: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
+    // createdAt: {
+    //   type: DataTypes.Date,
+    //   allowNull: false
+    // },
   }, {
     sequelize,
     modelName: 'Comment',

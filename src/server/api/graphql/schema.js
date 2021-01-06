@@ -53,14 +53,24 @@ const typeDefs = gql`
     id: ID!
     title: String!
     body: String!
-    status: Int!
+    createdAt: String!
+    status: Boolean!
     author: User!
     isLiked: Boolean!
     tag: PostTag!
     comments: [Comment!]!
     commentCount: Int!
     likesCount: Int!
+    total: Int!
     # likeVerifiedCount: Int!
+  }
+
+  type PostResult{
+    totalItems: Int!
+    totalPages: Int!
+    currentPage: Int!
+    hasMore: Boolean!
+    posts: [Post]
   }
 
   type Comment {
@@ -69,6 +79,11 @@ const typeDefs = gql`
     status: Boolean!
     post: Post!
     user: User!
+    createdAt: String!
+  }
+  type ResourceLiked {
+    post: Post
+    comment: Comment
   }
 
   type File {
@@ -86,7 +101,7 @@ const typeDefs = gql`
     allConseil: [Conseil!]!
     symptome(id: ID!): Symptome!
     allSymptome: [Symptome!]!
-    posts: [Post!]!
+    postResult(page: Int, size: Int): PostResult!
     post(id: ID!): Post!
     tags: [PostTag!]!
     tag(id: ID!): PostTag!
@@ -125,6 +140,10 @@ const typeDefs = gql`
           phone: String!
           password: String!
         ): AuthData!
+        likeResource(
+          resourceId : String!
+          model: String!
+        ): ResourceLiked!
         profile(
           userId: String!
           firstName: String
@@ -138,9 +157,13 @@ const typeDefs = gql`
     }
 
     type Subscription {
-        newPeriode(periodeId: ID): Periode
-        newPost: Post
-        newComment(postId: ID!): Comment
+        newPeriode(periodeId: ID): Periode!
+        newPost: Post!
+        newComment(postId: ID!): Comment!
+        resourcetLiked(
+          resourceId: ID!
+          model: String!
+        ): ResourceLiked!
     }
 `;
 

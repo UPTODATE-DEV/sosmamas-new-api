@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post);
       models.User.hasMany(models.Like);
     }
-  };
+  }
   User.init({
     phone: {
       type: DataTypes.STRING,
@@ -36,7 +36,9 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0
     },
     status: {
-      type: DataTypes.BOOLEAN
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
     password: {
       type:DataTypes.STRING

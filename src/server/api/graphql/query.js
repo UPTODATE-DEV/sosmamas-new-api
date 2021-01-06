@@ -1,10 +1,28 @@
 
+const getPagination = (page, size) => {
+    const limit = size ? +size : 3;
+    const offset = page ? page * limit : 0;
+
+    return { limit, offset };
+};
+
 module.exports = ({
     async user(root, { id }, { user, models }) {
         // if (!user) {
         //     throw new Error('Unauthenticated!');
         // }
         const data = models.User.findOne({ where: { id: id } });
+        if (data) {
+            return data;
+        } else {
+            return null;
+        }
+    },
+    async users(root, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        const data = models.User.findAll();
         if (data) {
             return data;
         } else {
@@ -51,13 +69,25 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.Post.findOne({ where: { id: id } })
+        const post = await models.Post.findOne({ where: { id: id } });
+        console.log(post);
+        return post;
     },
-    async posts(_, args, { user, models }) {
+    async postResult(_, args, { user, models }) {
         // if (!user) {
         //     throw new Error('Unauthenticated!');
         // }
-        return models.Post.findAll()
+        const { limit, offset } = getPagination(args.page, args.size);
+        const data = await models.Post.findAndCountAll({
+            offset: offset, limit: limit,
+            order: [['createdAt', 'DESC']]
+        });
+        const { count: totalItems, rows: posts } = data;
+        const currentPage = (args.page ? +args.page : 0) + 1;
+        const totalPages = Math.ceil(totalItems / limit);
+        const hasMore = currentPage < totalPages;
+        const responseData = { totalItems, totalPages, currentPage, hasMore, posts };
+        return responseData;
     },
     async tag(_, { id }, { user, models }) {
         // if (!user) {
@@ -75,7 +105,8 @@ module.exports = ({
         // if (!user) {
         //     throw new Error('Unauthenticated!');
         // }
-        return models.Comment.findAll({ where: { postId: postId } })
+        return models.Comment.findAll({
+            where: { postId: postId },
+        })
     },
-
 })

@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Periode.hasMany(models.Conseil);
       Periode.hasMany(models.Symptome);
     }
-  };
+  }
   Periode.init({
     name: DataTypes.STRING
   }, {

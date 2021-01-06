@@ -1,5 +1,6 @@
 const { ApolloServer } = require('apollo-server-express');
 const express = require('express');
+const { createServer } = require('http');
 const cors = require('cors');
 // const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -8,12 +9,12 @@ const typeDefs = require('./api/graphql/schema');
 const resolvers = require('./api/graphql/resolvers');
 const models = require('./models/index');
 
-const port = 4000;
+const PORT = process.env.PORT || 4000;
 
 const getUser = token => {
   try {
     if (token) {
-      return jwt.verify(token, process.env.ACCESS_TOKEN)
+      return jwt.verify(token, process.env.ACCESS_TOKEN || "somesecretkey")
     }
     return null
   } catch (error) {
@@ -21,29 +22,45 @@ const getUser = token => {
   }
 };
 
-const server = new ApolloServer({
+const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
     if (!req) {
       return { user: null, models }
     }
-    
     const token = req.get('authorization') || ''
     const authData = getUser(token.split(' ')[1])
     return { user: authData, models }
   },
-  // introspection: true,
-  // playground: true
+  subscriptions:{
+    onConnect: (_, ws)=>{
+      // console.log(ws)
+    }
+  },
+  introspection: true,
+  playground: true
 });
 
 const app = express();
-server.applyMiddleware({ app });
+apolloServer.applyMiddleware({ app });
 
 app.use(express.static('public'));
 app.use(cors());
 // app.use(bodyParser.json());
 
-app.listen({ port: port }, (url) => {
-  console.log(`🚀  Server ready at http://localhost:${port}/graphql`);
+const httpServer = createServer(app);
+apolloServer.installSubscriptionHandlers(httpServer, {
+  options: {
+    reconnect: true,
+  }
 });
+
+httpServer.listen({ port: PORT }, () => {
+  console.log(`🚀 Server ready at http://localhost:${PORT}${apolloServer.graphqlPath}`)
+  console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${apolloServer.subscriptionsPath}`)
+})
+
+// app.listen({ port: port }, (url) => {
+//   console.log(`🚀  Server ready at http://localhost:${port}/graphql`);
+// });

@@ -46,7 +46,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        let newComment = models.Comment.create({ id: uniqid(''), content: content, postId: postId, userId: user.userId });
+        let newComment = await models.Comment.create({ id: uniqid(''), content: content, postId: postId, userId: user.userId });
         pubsub.publish(NEW_COMMENT, { newComment: newComment });
         return newComment;
     },
@@ -78,7 +78,7 @@ module.exports = ({
         }
         const hashedPassword = await bcrypt.hash(args.password, 12);
 
-        const user = models.User.create({
+        const user = await models.User.create({
             id: uniqid(''),
             phone: args.phone,
             password: hashedPassword
@@ -95,9 +95,10 @@ module.exports = ({
             if (!isEqual) {
                 throw new Error('Password is incorrect!');
             }
+            // console.log(process.env.ACCESS_TOKEN || "somesecretkey");
             const token = jwt.sign(
                 { userId: user.id, phone: user.phone },
-                process.env.ACCESS_TOKEN,
+                process.env.ACCESS_TOKEN || "somesecretkey",
                 {
                     expiresIn: '1h'
                 }
@@ -106,12 +107,47 @@ module.exports = ({
         }
         throw new Error('User doesn\'t exist!');
     },
+    async likeResource(_, args, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
+        return await models.Like.findOrCreate({
+            where: {
+                userId: user.userId,
+                resourceId: args.resourceId
+            },
+            args
+        }).then(([result, created]) => {
+            if (!created) {
+                result.destroy({
+                    where: {
+                        userId: user.userId,
+                        resourceId: args.resourceId
+                    }
+                });
+            }
+            if (args.model === "Post") {
+                const post = models.Post.findOne({
+                    where: { id: args.resourceId }
+                });
+                pubsub.publish('NEW_RESSOURCE_LIKE', { resoureLiked: post });
+                return { post }
+            } else {
+                const comment = models.Post.findOne({
+                    where: { id: args.resourceId }
+                });
+                pubsub.publish('NEW_RESSOURCE_LIKE', { resoureLiked: comment });
+                return { comment }
+            }
+        });
+
+    },
     async uploadFile(_, { file }, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
         // const {createReadStream, filename, mimetype, encoding} = await file;
-        const {createReadStream, filename} = await file;
+        const { createReadStream, filename } = await file;
         const stream = createReadStream();
         const pathName = path.basename.apply.join(__dirname, `/public/storage/images/${filename}`);
         await stream.pipe(fs.createWriteStream(pathName));

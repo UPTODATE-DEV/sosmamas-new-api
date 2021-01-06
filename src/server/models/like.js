@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       });
     }
-  };
+  }
   Like.init({
     userId: {
       type:DataTypes.STRING,

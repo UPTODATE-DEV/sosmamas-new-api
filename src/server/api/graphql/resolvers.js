@@ -9,7 +9,7 @@ const resolvers = {
         newPeriode: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator([NEW_PERIODE]),
-                (payload, args) => {
+                (_, __) => {
                     return true
                 },
             ),
@@ -24,18 +24,39 @@ const resolvers = {
             ),
             resolve: (payload) => (payload.newPost)
         },
+        resourcetLiked: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(['NEW_RESSOURCE_LIKE']),
+                async (payload, args) => {
+                    let resourceId;
+                    await payload.resoureLiked.then(function (result) {
+                        resourceId = result.dataValues.id;
+                    });
+                    return resourceId === args.resourceId
+                },
+            ),
+            resolve: async (payload, args, {connection}) => {
+                console.log(connection)
+                let resource;
+                await payload.resoureLiked.then(function (result) {
+                    resource = result.dataValues;
+                });
+                if (args.model === "Post") {
+                    return { post: resource }
+                } else {
+                    return { comment: resource }
+                }
+            }
+        },
         newComment: {
             subscribe: withFilter(
                 () => pubsub.asyncIterator(NEW_COMMENT),
                 async (payload, args) => {
-                    let postId = "";
-                    await payload.newComment.then(function (result) {
-                        postId = result.dataValues.postId;
-                    })
-                    return postId === args.postId;
+                    return payload.newComment.postId === args.postId;
                 },
             ),
             resolve: (payload) => (payload.newComment)
+
         },
     },
     Query: query,
@@ -68,8 +89,15 @@ const resolvers = {
         async tag(root, _, { models }) {
             return models.PostTag.findOne({ where: { id: root.tagId } })
         },
+        async total(root, _, { models }) {
+            return models.Post.count()
+        },
         async comments(root, _, { models }) {
-            return models.Comment.findAll({ where: { postId: root.id } })
+            return models.Comment.findAll({
+                where: { postId: root.id },
+
+                order: [['createdAt', 'DESC']]
+            })
         },
         async commentCount(root, _, { models }) {
             return models.Comment.count({ where: { postId: root.id } })
@@ -78,7 +106,7 @@ const resolvers = {
             return models.Like.count({ where: { resourceId: root.id } })
         },
         async isLiked(root, _, { user, models }) {
-            
+
             const isRessourceLiked = await models.Like.count({
                 where: {
                     userId: user ? user.userId : "",
@@ -87,16 +115,6 @@ const resolvers = {
             });
             return isRessourceLiked === 1;
         },
-        // async likeVerifiedCount(root, _, { user, models }) {
-            
-        //     const isverifiedLikedCount = await models.Like.count({
-        //         include:[{
-        //             model: models.User,
-        //             where: { isVerified: true }
-        //         }]
-        //     });
-        //     return isverifiedLikedCount;
-        // },
     },
     Comment: {
         async post(root, _, { models }) {
