@@ -1,6 +1,7 @@
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+  scalar DateTime
   type Periode {
     id: ID!
     name: String!
@@ -53,7 +54,7 @@ const typeDefs = gql`
     id: ID!
     title: String!
     body: String!
-    createdAt: String!
+    createdAt: DateTime!
     status: Boolean!
     author: User!
     isLiked: Boolean!
