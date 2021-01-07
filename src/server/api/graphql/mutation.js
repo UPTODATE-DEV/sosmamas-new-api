@@ -3,9 +3,10 @@ const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
 var uniqid = require('uniqid');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { where } = require('sequelize');
-const path = require('path');
 const fs = require('fs');
+const path = require('path')
+
+const storeFS = require('../middleware/upload-file')
 
 module.exports = ({
     async createPeriode(_, { name }, { user, models }) {
@@ -142,19 +143,25 @@ module.exports = ({
         });
 
     },
-    async uploadFile(_, { file }, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
-        // const {createReadStream, filename, mimetype, encoding} = await file;
-        const { createReadStream, filename } = await file;
+    async uploadFile(_, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        const file = args.file
+        const { createReadStream, filename, mimetype, encoding } = await file;
+        const fileName = `${uniqid('')}${Math.floor(Date.now() / 1000)}.${filename.split('.')[1]}`
+        // const fileStream = createReadStream()
+        const filePath = path.join(`public/images/${fileName}`)
         const stream = createReadStream();
-        const pathName = path.basename.apply.join(__dirname, `/public/storage/images/${filename}`);
-        await stream.pipe(fs.createWriteStream(pathName));
+        // storeFS({ filePath, stream, filename, mimetype });
+
+        await stream.pipe(fs.createWriteStream(filePath))
 
         return {
-            url: `http://localhost:4000/images/$fileName`,
-            path: `${pathName}`
+            filename: fileName,
+            path: `http://localhost:9000/images/${fileName}`,
+            mimetype: mimetype,
+            encoding: encoding
         };
     },
-})
+});

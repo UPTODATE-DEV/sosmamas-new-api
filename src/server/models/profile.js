@@ -38,6 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    isVerified: {
+      type:DataTypes.BOOLEAN,
+      defaultValue: 0
+    },
     avatar: DataTypes.STRING,
     address: DataTypes.STRING
   }, {

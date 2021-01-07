@@ -15,6 +15,7 @@ const typeDefs = gql`
     isVerified: Boolean!
     phone: String!
     profile: Profile
+    createdAt: DateTime!
   }
   type AuthData {
     userId: ID!
@@ -30,6 +31,7 @@ const typeDefs = gql`
     avatar: String
     gender: String
     address: String
+    updatedAt: DateTime!
   }
 
   type Conseil {
@@ -80,7 +82,7 @@ const typeDefs = gql`
     status: Boolean!
     post: Post!
     user: User!
-    createdAt: String!
+    createdAt: DateTime!
   }
   type ResourceLiked {
     post: Post
@@ -91,6 +93,7 @@ const typeDefs = gql`
     filename: String!
     mimetype: String!
     encoding: String!
+    path: String!
   }
 
   type Query {
