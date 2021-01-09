@@ -3,10 +3,17 @@ const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
 var uniqid = require('uniqid');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path')
+const fetch = require('node-fetch');
 
-const storeFS = require('../middleware/upload-file')
+function makeid(length) {
+    var result           = '';
+    var characters       = '012345678909876543210123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
 
 module.exports = ({
     async createPeriode(_, { name }, { user, models }) {
@@ -82,6 +89,7 @@ module.exports = ({
         const user = await models.User.create({
             id: uniqid(''),
             phone: args.phone,
+            username: `${args.firstname}${args.firstname || args.name}`  + makeid(3),
             password: hashedPassword
         });
 
@@ -147,21 +155,23 @@ module.exports = ({
         // if (!user) {
         //     throw new Error('Unauthenticated!');
         // }
-        const file = args.file
-        const { createReadStream, filename, mimetype, encoding } = await file;
-        const fileName = `${uniqid('')}${Math.floor(Date.now() / 1000)}.${filename.split('.')[1]}`
-        // const fileStream = createReadStream()
-        const filePath = path.join(`public/images/${fileName}`)
-        const stream = createReadStream();
-        // storeFS({ filePath, stream, filename, mimetype });
+        // const body = { image: args.file };
 
-        await stream.pipe(fs.createWriteStream(filePath))
+        // fetch('http://localhost:9000/api/v1/upload', {
+        //     method: 'post',
+        //     body: JSON.stringify(body),
+        //     headers: { 'multipart': 'form-data' },
+        // })
+        //     .then(res => res.json())
+        //     .then(json => console.log(json));
+
+        // fetch
 
         return {
-            filename: fileName,
-            path: `http://localhost:9000/images/${fileName}`,
-            mimetype: mimetype,
-            encoding: encoding
+            filename: 'fileName',
+            path: `http://localhost:9000/images/`,
+            mimetype: 'mimetype',
+            encoding: 'encoding'
         };
     },
 });

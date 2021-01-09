@@ -140,6 +140,7 @@ const resolvers = {
             return models.Profile.findOne({ where: { userId: root.id } })
         },
     },
+    // Upload: mutation.GraphQLUpload,
 };
 
 module.exports = resolvers;

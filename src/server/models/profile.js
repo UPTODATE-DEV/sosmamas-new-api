@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       });
     }
-  };
+  }
   Profile.init({
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
@@ -38,10 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    isVerified: {
-      type:DataTypes.BOOLEAN,
-      defaultValue: 0
-    },
+    // isVerified: {
+    //   type:DataTypes.BOOLEAN,
+    //   defaultValue: 0
+    // },
     avatar: DataTypes.STRING,
     address: DataTypes.STRING
   }, {

@@ -1,4 +1,7 @@
 const { gql } = require('apollo-server-express');
+const { GraphQLUpload, Upload } = require('graphql-upload');
+
+
 
 const typeDefs = gql`
   scalar DateTime
@@ -12,7 +15,7 @@ const typeDefs = gql`
     id: ID!
     username: String 
     password: String!
-    isVerified: Boolean!
+    # isVerified: Boolean!
     phone: String!
     profile: Profile
     createdAt: DateTime!
@@ -99,6 +102,7 @@ const typeDefs = gql`
   type Query {
     users: [User!]
     user(id: ID!): User
+    phoneVerification(phone: String!): Boolean!
     periode(id: ID!): Periode
     allPeriodes: [Periode!]!
     conseil(id: ID!): Conseil!

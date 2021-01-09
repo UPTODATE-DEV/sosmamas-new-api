@@ -18,6 +18,10 @@ module.exports = ({
             return null;
         }
     },
+    async phoneVerification(root, args , { models }) {
+        const data = models.Profile.findOne({ where: { name: args.phone } });
+        return data !== null;
+    },
     async users(root, args, { user, models }) {
         // if (!user) {
         //     throw new Error('Unauthenticated!');
