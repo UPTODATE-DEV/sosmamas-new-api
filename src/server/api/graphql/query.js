@@ -19,8 +19,8 @@ module.exports = ({
         }
     },
     async phoneVerification(root, args , { models }) {
-        const data = models.Profile.findOne({ where: { name: args.phone } });
-        return data !== null;
+        const data = await models.User.findOne({ where: { phone: args.phone } });
+        return data === null;
     },
     async users(root, args, { user, models }) {
         // if (!user) {

@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
         cb(null, 'public/images/');
     },
     filename: function (req, file, cb) {
-        const fileName = `${uniqid('').toUpperCase()}${Math.floor(Date.now() / 1000)}.${file.originalname.split('.')[1]}`
+        const fileName = `${Math.floor(Date.now() / 1000)}${uniqid('').toUpperCase()}.${file.originalname.split('.')[1]}`
         req.fileName = fileName;
         cb(null, fileName);
     }
