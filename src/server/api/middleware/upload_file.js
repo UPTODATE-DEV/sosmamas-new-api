@@ -7,13 +7,13 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         const fileName = `${Math.floor(Date.now() / 1000)}${uniqid('').toUpperCase()}.${file.originalname.split('.')[1]}`
-        req.fileName = fileName;
+        req.filename = fileName;
         cb(null, fileName);
     }
 });
 
 const fileFilter = (req, file, cb) => {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
         cb(null, true);
     } else {
         req.fileName = null;

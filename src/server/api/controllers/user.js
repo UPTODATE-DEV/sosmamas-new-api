@@ -6,7 +6,6 @@ exports.uploadProfile = async (req, res) => {
 
     if (fileName) {
         const find = await models.Profile.findOne({ where: { userId: userId } },);
-        console.log(find)
         if (find) {
             const update = await find.update(
                 { avatar: fileName },
@@ -24,32 +23,11 @@ exports.uploadProfile = async (req, res) => {
                 profile: create
             });
         }
-        // const profile = await models.Profile.findOrCreate({
-        //     userId: userId,
-        //     avatar: fileName
-        // }, {
-        //     where: { userId: userId },
-
-        // }).then(([result, created]) => {
-        //     console.log(created);
-        //     if (created) {
-        //         return created;
-        //     } else {
-        //         const update = result.update(
-        //             { avatar: fileName },
-        //             { where: { userId: userId } }
-        //         );
-        //         return update;
-        //     }
-        // });
-        // res.status(200).json({
-        //     profile
-        // });
     } else {
         res.status(404).json({
             message: 'Bad format',
             path: '',
-        })
+        });
     }
 
 }

@@ -39,10 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: true
     },
-    // createdAt: {
-    //   type: DataTypes.Date,
-    //   allowNull: false
-    // },
   }, {
     sequelize,
     modelName: 'Comment',

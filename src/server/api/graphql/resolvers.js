@@ -1,5 +1,12 @@
 const { withFilter } = require('apollo-server-express');
-// const subscription = require('./subscription');
+const TimeAgo  = require('javascript-time-ago');
+const fr  = require('javascript-time-ago/locale/fr');
+
+TimeAgo.addLocale(fr)
+TimeAgo.addDefaultLocale(fr)
+const timeAgo = new TimeAgo('fr-FR')
+const numeral = require('numeral');
+
 const mutation = require('./mutation');
 const query = require('./query');
 const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
@@ -62,16 +69,26 @@ const resolvers = {
     Query: query,
     Mutation: mutation,
     Periode: {
-        async conseils(root, _, { models }) {
-            return models.Conseil.findAll({ where: { periodeId: root.id } })
-        },
         async symptomes(root, _, { models }) {
             return models.Symptome.findAll({ where: { periodeId: root.id } })
         },
     },
-    Conseil: {
+    ConseilItem: {
+        async conseil(root, _, { models }) {
+            return models.Conseil.findOne({ where: { id: root.conseilId } })
+        },
         async periode(root, _, { models }) {
             return models.Periode.findOne({ where: { id: root.periodeId } })
+        }
+    },
+    Conseil: {
+        async items(root, args, { models }) {
+            
+            return models.ConseilItem.findAll({ where: { 
+                conseilId: root.id,
+                periodeId: args.periodeId
+            } 
+        })
         }
     },
     Symptome: {
@@ -89,21 +106,21 @@ const resolvers = {
         async tag(root, _, { models }) {
             return models.PostTag.findOne({ where: { id: root.tagId } })
         },
-        async total(root, _, { models }) {
-            return models.Post.count()
-        },
         async comments(root, _, { models }) {
             return models.Comment.findAll({
                 where: { postId: root.id },
-
                 order: [['createdAt', 'DESC']]
             })
         },
         async commentCount(root, _, { models }) {
-            return models.Comment.count({ where: { postId: root.id } })
+            let count =  await models.Comment.count({ where: { postId: root.id } });
+            const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
+            return formatedCout;
         },
         async likesCount(root, _, { models }) {
-            return models.Like.count({ where: { resourceId: root.id } })
+            const count = await models.Like.count({ where: { resourceId: root.id } });
+            const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
+            return formatedCout;
         },
         async isLiked(root, _, { user, models }) {
 
@@ -115,21 +132,34 @@ const resolvers = {
             });
             return isRessourceLiked === 1;
         },
+        async timeAgo(root) {
+            const time = timeAgo.format(root.createdAt)
+            return time;
+        },
     },
     Comment: {
         async post(root, _, { models }) {
             return models.Post.findByPk(root.postId)
         },
-        async user(root, _, { user, models }) {
+        async author(root, _, { models }) {
             // if (!user) {
             //     throw new Error('Unauthenticated!');
             // }
             return models.User.findByPk(root.userId)
         },
+        async timeAgo(root) {
+            const time = timeAgo.format(root.createdAt)
+            return time;
+        },
     },
     PostTag: {
         async posts(root, args, { user, models }) {
             return models.Post.findAll({ where: { tagId: root.id } })
+        },
+    },
+    AuthData: {
+        async user(root, args, { models }) {
+            return models.User.findOne({ where: { id: root.userId } })
         },
     },
     User: {

@@ -8,9 +8,9 @@ const getPagination = (page, size) => {
 
 module.exports = ({
     async user(root, { id }, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         const data = models.User.findOne({ where: { id: id } });
         if (data) {
             return data;
@@ -18,7 +18,7 @@ module.exports = ({
             return null;
         }
     },
-    async phoneVerification(root, args , { models }) {
+    async phoneVerification(root, args, { models }) {
         const data = await models.User.findOne({ where: { phone: args.phone } });
         return data === null;
     },
@@ -26,7 +26,7 @@ module.exports = ({
         // if (!user) {
         //     throw new Error('Unauthenticated!');
         // }
-        const data = models.User.findAll();
+        const data = models.User.findAll({ order: [['createdAt', 'DESC']] });
         if (data) {
             return data;
         } else {
@@ -34,15 +34,15 @@ module.exports = ({
         }
     },
     async periode(root, { id }, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Periode.findOne({ where: { id: id } })
     },
-    async allPeriodes(root, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+    async periodes(root, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Periode.findAll()
     },
     async conseil(root, { id }, { user, models }) {
@@ -51,11 +51,17 @@ module.exports = ({
         }
         return models.Conseil.findOne({ where: { id: id } })
     },
-    async allConseil(_, args, { models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
-        return models.Conseil.findAll()
+    async conseils(_, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        return models.Conseil.findAll();
+    },
+    async conseilItems(_, args, { user, models }) {
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
+        return models.ConseilItem.findAll();
     },
     async symptome(_, { id }, { user, models }) {
         if (!user) {
@@ -63,7 +69,7 @@ module.exports = ({
         }
         return models.Symptome.findOne({ where: { id: id } })
     },
-    async allSymptome(root, args, { user, models }) {
+    async symptomes(root, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
@@ -111,6 +117,7 @@ module.exports = ({
         // }
         return models.Comment.findAll({
             where: { postId: postId },
+            order: [['createdAt', 'DESC']]
         })
     },
 })

@@ -3,20 +3,27 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Conseil extends Model {
+  class ConseilItem extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.ConseilItem.belongsTo(models.Conseil, {
+        onDelete: 'cascade',
+      });
+      models.ConseilItem.belongsTo(models.Periode, {
+        onDelete: 'cascade',
+      });
     }
-  };
-  Conseil.init({
+  }
+  ConseilItem.init({
     title: DataTypes.STRING,
-    description: DataTypes.STRING,
+    body: DataTypes.STRING,
     image: DataTypes.STRING,
+    conseilId: DataTypes.INTEGER,
+    periodeId: DataTypes.INTEGER,
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -24,13 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'Conseil',
+    modelName: 'ConseilItem',
   });
-  Conseil.associate = (models) => {
-    // models.Conseil.belongsTo(models.Periode, {
-    //   onDelete: 'cascade',
-    // });
-    models.Conseil.hasMany(models.ConseilItem);
-  };
-  return Conseil;
+  return ConseilItem;
 };

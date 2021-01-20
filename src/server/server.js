@@ -3,7 +3,6 @@ const { ApolloServer } = require('apollo-server-express');
 // const { createServer } = require('http');
 // const cors = require('cors');
 // const path = require('path');
-// const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 // require('dotenv').config();
 const typeDefs = require('./api/graphql/schema');

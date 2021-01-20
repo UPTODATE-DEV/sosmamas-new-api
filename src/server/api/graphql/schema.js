@@ -1,29 +1,26 @@
 const { gql } = require('apollo-server-express');
-const { GraphQLUpload, Upload } = require('graphql-upload');
-
-
 
 const typeDefs = gql`
   scalar DateTime
   type Periode {
     id: ID!
     name: String!
-    conseils: [Conseil!]!
     symptomes: [Symptome]
   }
   type User {
     id: ID!
     username: String 
     password: String!
-    # isVerified: Boolean!
     phone: String!
+    status: Boolean!
     profile: Profile
     createdAt: DateTime!
   }
   type AuthData {
     userId: ID!
     token: String!
-    tokenExpiration: Int!
+    isLoggedIn: Boolean!
+    user: User!
   }
 
   type Profile{
@@ -34,13 +31,26 @@ const typeDefs = gql`
     avatar: String
     gender: String
     address: String
+    isVerified: Boolean!
     updatedAt: DateTime!
   }
 
   type Conseil {
     id: ID!
-    name: String!
+    title: String!
+    description: String!
+    status: Boolean!
+    items(periodeId: ID): [ConseilItem!]!
+  }
+
+  type ConseilItem {
+    id: ID!
+    title: String!
+    body: String!
+    image: String
+    status: Boolean!
     periode: Periode!
+    conseil: Conseil!
   }
 
   type Symptome {
@@ -60,14 +70,14 @@ const typeDefs = gql`
     title: String!
     body: String!
     createdAt: DateTime!
+    timeAgo: String!
     status: Boolean!
     author: User!
     isLiked: Boolean!
     tag: PostTag!
     comments: [Comment!]!
-    commentCount: Int!
-    likesCount: Int!
-    total: Int!
+    commentCount: ID!
+    likesCount: ID!
     # likeVerifiedCount: Int!
   }
 
@@ -84,8 +94,9 @@ const typeDefs = gql`
     content: String!
     status: Boolean!
     post: Post!
-    user: User!
+    author: User!
     createdAt: DateTime!
+    timeAgo: String!
   }
   type ResourceLiked {
     post: Post
@@ -104,11 +115,12 @@ const typeDefs = gql`
     user(id: ID!): User
     phoneVerification(phone: String!): Boolean!
     periode(id: ID!): Periode
-    allPeriodes: [Periode!]!
+    periodes: [Periode!]!
     conseil(id: ID!): Conseil!
-    allConseil: [Conseil!]!
+    conseils: [Conseil!]!
+    conseilItems: [ConseilItem!]!
     symptome(id: ID!): Symptome!
-    allSymptome: [Symptome!]!
+    symptomes: [Symptome!]!
     postResult(page: Int, size: Int): PostResult!
     post(id: ID!): Post!
     tags: [PostTag!]!
@@ -117,36 +129,63 @@ const typeDefs = gql`
   }
 
   type Mutation {
-        createPeriode(name: String!): Periode!
-        createConseil(
+        updatePeriode(id: ID, name: String!): Periode!
+        updateConseil(
+          id: ID
+          title: String!
+          description: String!
+        ): Conseil!
+        updateConseilItem(
+          id: ID
+          conseilId: ID!
           periodeId: ID!
           title: String!
-          name: String!
-        ): Conseil!
-        createSymptome(
+          body: String!
+          image: String
+        ): ConseilItem!
+        updateSymptome(
           periodeId: ID!
           title: String!
           name: String!
         ): Symptome!
-        createPostTag(
+        updatePostTag(
+          id: ID,
           name: String!
         ): PostTag!
-        createPost(
-          tagId: String!
+        updatePost(
+          id: ID
+          tagId: ID!
           title: String!
           body: String!
+          status: Boolean
         ): Post!
-        createComment(
-          postId: String!
+        updateComment(
+          id: ID
+          postId: ID!
           content: String!
+          status: Boolean
         ): Comment!
-        createUser(
-          phone: String!
-          password: String!
+        updateUser(
+          id: ID
+          phone: String
+          password: String
+          isVerified: Boolean
+          status: Boolean
+          username: String
+          firstName: String
+          lastName: String
+          name: String
+          gender: String
+          avatar: Upload
+          address: String
         ): User!
         login(
-          phone: String!
+          userID: String!
           password: String!
+          device_id: String!
+        ): AuthData!
+        logout(
+          device_id: String!
         ): AuthData!
         likeResource(
           resourceId : String!
@@ -158,7 +197,7 @@ const typeDefs = gql`
           lastName: String
           name: String
           gender: String
-          avatar: String
+          avatar: Upload
           address: String
         ): Profile!
         uploadFile(file: Upload!): File
