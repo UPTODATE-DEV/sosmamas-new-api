@@ -70,11 +70,20 @@ module.exports = ({
         }
         return models.ConseilItem.create(args);
     },
-    async updateSymptome(_, { title, name, periodeId }, { user, models }) {
+    async updateSymptome(_, { args }, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.Symptome.create({ title: title, name: name, periodeId: periodeId });
+        if (args.id) {
+            const symptome = await models.Symptome.findOne({ where: { id: args.id } });
+            if (symptome) {
+                const update = symptome.update(args, { where: { id: args.id } });
+                return update;
+            } else {
+                throw new Error('Not Fount!');
+            }
+        }
+        return models.Symptome.create(args);
     },
     async updatePostTag(_, args, { user, models }) {
         if (!user) {

@@ -26,6 +26,9 @@ app.use(cors());
 // app.use("/", upload.single('image'), (req, res, next) => {
 //   next()
 // });
+// app.use("/", upload.single('image'), (req, res, next) => {
+//   next()
+// });
 
 apolloServer.applyMiddleware({ app });
 

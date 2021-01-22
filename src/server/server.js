@@ -31,13 +31,28 @@ const apolloServer = new ApolloServer({
     const authData = getUser(token.split(' ')[1])
     return { user: authData, models }
   },
+  // connectionName: 'graphql/user'
   // subscriptions:{
   //   onConnect: (_, ws)=>{
-      // console.log(ws)
+  // console.log(ws)
   //   }
   // },
   // introspection: true,
   // playground: true
+});
+
+const appServer2 = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: ({ req }) => {
+    if (!req) {
+      return { user: null, models }
+    }
+    const token = req.get('authorization') || ''
+    const authData = getUser(token.split(' ')[1])
+    return { user: authData, models }
+  },
+  // connectionName: 'graphql/user'
 });
 
 module.exports = { apolloServer }

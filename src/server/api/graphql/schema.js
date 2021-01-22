@@ -40,6 +40,7 @@ const typeDefs = gql`
     title: String!
     description: String!
     status: Boolean!
+    image: String
     items(periodeId: ID): [ConseilItem!]!
   }
 
@@ -118,7 +119,7 @@ const typeDefs = gql`
     periodes: [Periode!]!
     conseil(id: ID!): Conseil!
     conseils: [Conseil!]!
-    conseilItems: [ConseilItem!]!
+    conseilItems(periodeId: ID, conseilId: ID): [ConseilItem!]!
     symptome(id: ID!): Symptome!
     symptomes: [Symptome!]!
     postResult(page: Int, size: Int): PostResult!
@@ -134,6 +135,8 @@ const typeDefs = gql`
           id: ID
           title: String!
           description: String!
+          image: String
+          status: Boolean
         ): Conseil!
         updateConseilItem(
           id: ID
@@ -141,12 +144,12 @@ const typeDefs = gql`
           periodeId: ID!
           title: String!
           body: String!
-          image: String
         ): ConseilItem!
         updateSymptome(
+          id: ID
           periodeId: ID!
           title: String!
-          name: String!
+          name: String
         ): Symptome!
         updatePostTag(
           id: ID,
