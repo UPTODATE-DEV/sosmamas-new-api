@@ -45,7 +45,7 @@ module.exports = ({
         }
         return models.Periode.findAll()
     },
-    async conseil(_, args , { user, models }) {
+    async conseil(_, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
@@ -61,7 +61,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.ConseilItem.findAll({where : args});
+        return models.ConseilItem.findAll({ where: args });
     },
     async symptome(_, { id }, { user, models }) {
         if (!user) {
@@ -73,7 +73,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.Symptome.findAll({where: args})
+        return models.Symptome.findAll({ where: args })
     },
     async post(_, { id }, { user, models }) {
         if (!user) {
@@ -90,7 +90,7 @@ module.exports = ({
         const { limit, offset } = getPagination(args.page, args.size);
         const data = await models.Post.findAndCountAll({
             offset: offset, limit: limit,
-            order: [['createdAt', 'DESC']]
+            order: [['createdAt', 'DESC']], where: { tagId: args.tagId }
         });
         const { count: totalItems, rows: posts } = data;
         const currentPage = (args.page ? +args.page : 0) + 1;
