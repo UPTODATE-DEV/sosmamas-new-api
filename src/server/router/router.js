@@ -6,6 +6,6 @@ const userController = require('../api/controllers/user')
 const uploadController = require('../api/controllers/upload_image')
 
 router.post('/upload', upload.single('image'),  userController.uploadProfile);
-router.post('/graphql', upload.single('image'),  uploadController.uploadImage);
+router.post('/upload', upload.single('image'),  uploadController.uploadImage);
 
 module.exports = router;

@@ -22,10 +22,10 @@ app.use(cors());
 //   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
 //   // graphqlHTTP({ schema })
 // );
-// app.use("/", appRoutes);
-// app.use("/", upload.single('image'), (req, res, next) => {
-//   next()
-// });
+app.use("/", appRoutes);
+app.use("/", upload.single('image'), (req, res, next) => {
+  next()
+});
 // app.use("/", upload.single('image'), (req, res, next) => {
 //   next()
 // });

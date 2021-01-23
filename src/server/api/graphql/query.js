@@ -1,6 +1,8 @@
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 const getPagination = (page, size) => {
-    const limit = size ? +size : 3;
+    const limit = size ? +size : 6;
     const offset = page ? page * limit : 0;
 
     return { limit, offset };
@@ -89,8 +91,9 @@ module.exports = ({
         }
         const { limit, offset } = getPagination(args.page, args.size);
         const data = await models.Post.findAndCountAll({
+            where: { [Op.or]: { tagId: args.tagId || {[Op.ne]: null} } },
             offset: offset, limit: limit,
-            order: [['createdAt', 'DESC']], where: { tagId: args.tagId }
+            order: [['createdAt', 'DESC']],
         });
         const { count: totalItems, rows: posts } = data;
         const currentPage = (args.page ? +args.page : 0) + 1;
