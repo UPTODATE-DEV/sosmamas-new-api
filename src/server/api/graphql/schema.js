@@ -56,6 +56,7 @@ const typeDefs = gql`
 
   type Symptome {
     id: ID!
+    title: String!
     name: String!
     periode: Periode!
   }
@@ -121,7 +122,7 @@ const typeDefs = gql`
     conseils: [Conseil!]!
     conseilItems(periodeId: ID, conseilId: ID): [ConseilItem!]!
     symptome(id: ID!): Symptome!
-    symptomes: [Symptome!]!
+    symptomes(periodeId: ID): [Symptome!]!
     postResult(page: Int, size: Int): PostResult!
     post(id: ID!): Post!
     tags: [PostTag!]!

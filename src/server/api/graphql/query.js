@@ -73,7 +73,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.Post.findAll()
+        return models.Symptome.findAll({where: args})
     },
     async post(_, { id }, { user, models }) {
         if (!user) {

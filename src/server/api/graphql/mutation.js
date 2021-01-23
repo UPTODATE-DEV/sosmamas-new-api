@@ -70,7 +70,7 @@ module.exports = ({
         }
         return models.ConseilItem.create(args);
     },
-    async updateSymptome(_, { args }, { user, models }) {
+    async updateSymptome(_, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
