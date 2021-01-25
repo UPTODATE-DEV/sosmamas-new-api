@@ -13,6 +13,7 @@ const typeDefs = gql`
     password: String!
     phone: String!
     status: Boolean!
+    visible: Boolean!
     role: String!
     profile: Profile
     createdAt: DateTime!
