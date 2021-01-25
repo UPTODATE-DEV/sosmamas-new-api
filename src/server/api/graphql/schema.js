@@ -175,8 +175,8 @@ const typeDefs = gql`
           phone: String
           password: String
           isVerified: Boolean
-          status: String
-          rolr: Boolean
+          status: Boolean
+          role: String
           username: String
           firstName: String
           lastName: String
