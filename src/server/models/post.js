@@ -11,15 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Post.belongsTo(models.PostTag, {
-        onDelete: 'cascade',
+        foreignKey: {
+          name: 'tagId', as:'tag',
+          onDelete: 'cascade',
+        }
       });
-      Post.hasOne(models.User, {
+      Post.belongsTo(models.User, {
+        foreignKey: {
+          name: 'authorId',as:'user',
+          onDelete: 'cascade',
+        }
+      });
+      Post.hasMany(models.Comment, {
         foreignKey: {
           name: 'authorId',
           onDelete: 'cascade',
         }
       });
-      Post.hasMany(models.Comment);
     }
   }
   Post.init({

@@ -24,6 +24,11 @@ fs
     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
     db[model.name] = model;
   });
+  // Object.keys(db).forEach((modelName) => {
+  //   if (db[modelName].associate) {
+  //     db[modelName].associate(db)
+  //   }
+  // });
 
 sequelize
   .authenticate()
@@ -33,8 +38,6 @@ sequelize
   .catch((err) => {
     console.log("Unable to connect to the database:", err);
   })
-
-
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

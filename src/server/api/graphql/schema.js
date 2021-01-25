@@ -81,6 +81,7 @@ const typeDefs = gql`
     tag: PostTag!
     comments: [Comment!]!
     commentCount: ID!
+    verifiedcommentCount: ID!
     likesCount: ID!
     # likeVerifiedCount: Int!
   }

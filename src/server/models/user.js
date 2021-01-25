@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -16,8 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'RESTRICT'
       });
       User.hasMany(models.Comment);
+      User.hasMany(models.Like);
       User.hasMany(models.Post);
-      models.User.hasMany(models.Like);
+      User.hasOne(models.Profile);
     }
   }
   User.init({
@@ -52,6 +53,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-  });
+  },);
   return User;
 };

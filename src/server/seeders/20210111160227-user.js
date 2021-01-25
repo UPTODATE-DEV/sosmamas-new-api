@@ -1,14 +1,18 @@
 'use strict';
-import models from '../models';
+// import models from '../models';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await models.User.create({
+    // await models.User.create({
+    //   username: 'sos-mamas-admin',
+    //   password: "@sos-mamas#Admin",
+    //   phone: "+243987654321",
+    // });
+    await queryInterface.bulkInsert('Users', [{
       username: 'sos-mamas-admin',
       password: "@sos-mamas#Admin",
       phone: "+243987654321",
-    });
-  //  await queryInterface.bulkInsert('Users', [], {});
+    },], {});
   },
 
   down: async (queryInterface, Sequelize) => {

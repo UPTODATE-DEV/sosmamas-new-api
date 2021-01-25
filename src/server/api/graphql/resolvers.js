@@ -117,6 +117,11 @@ const resolvers = {
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
             return formatedCout;
         },
+        async verifiedcommentCount(root, _, { models }) {
+            let count =  await models.Comment.count({ where: { postId: root.id }, });
+            const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
+            return formatedCout;
+        },
         async likesCount(root, _, { models }) {
             const count = await models.Like.count({ where: { resourceId: root.id } });
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
@@ -142,9 +147,6 @@ const resolvers = {
             return models.Post.findByPk(root.postId)
         },
         async author(root, _, { models }) {
-            // if (!user) {
-            //     throw new Error('Unauthenticated!');
-            // }
             return models.User.findByPk(root.userId)
         },
         async timeAgo(root) {
@@ -164,9 +166,6 @@ const resolvers = {
     },
     User: {
         async profile(root, args, { user, models }) {
-            // if (!user) {
-            //     throw new Error('Unauthenticated!');
-            // }
             return models.Profile.findOne({ where: { userId: root.id } })
         },
     },

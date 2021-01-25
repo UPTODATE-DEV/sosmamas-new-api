@@ -5,8 +5,8 @@ exports.uploadImage = async (req, res, next) => {
     console.log(req.body)
     const resource = req.body.resource;
 
+    const fileName = req.filename;
     if (resource === 'user') {
-        const fileName = req.filename;
         const userId = req.body.userId;
         const find = await models.Profile.findOne({ where: { userId: userId } },);
         if (find) {
@@ -26,7 +26,25 @@ exports.uploadImage = async (req, res, next) => {
                 profile: create
             });
         }
-    } else {
+    } else if(resource === 'conseil'){
+        const conseilId = req.body.conseilId;
+        const find = await models.Conseil.findOne({ where: { id: conseilId } },);
+        if (find) {
+            const update = await find.update(
+                { image: fileName },
+                { where: { id: conseilId } }
+            );
+            res.status(200).json({
+                profile: update
+            });
+        } else {
+            res.status(404).json({
+                message: 'Not Found',
+                path: '',
+            });
+        }
+    }
+    else {
         res.status(404).json({
             message: 'Bad format',
             path: '',
