@@ -4,16 +4,15 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const { createServer } = require('http');
-const { graphqlUploadExpress } = require('graphql-upload');
+// const { graphqlUploadExpress } = require('graphql-upload');
 const appRoutes = require('./src/server/router/router');
-const bodyParser = require('body-parser');
-const upload = require('./src/server/api/middleware/upload_file')
+// const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 4000;
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public/uploads')));
 app.use(cors());
 // app.use(bodyParser.json());
 
@@ -22,10 +21,11 @@ app.use(cors());
 //   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
 //   // graphqlHTTP({ schema })
 // );
-app.use("/", appRoutes);
-app.use("/", upload.single('image'), (req, res, next) => {
-  next()
-});
+app.use("/graphql", appRoutes);
+// app.use("/graphql", upload.single('image'), (_, __, next) => {
+//   console.log(_.body)
+//   next()
+// });
 // app.use("/", upload.single('image'), (req, res, next) => {
 //   next()
 // });

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   ConseilItem.init({
     title: DataTypes.STRING,
-    body: DataTypes.STRING,
+    body: DataTypes.TEXT,
     image: DataTypes.STRING,
     conseilId: DataTypes.INTEGER,
     periodeId: DataTypes.INTEGER,

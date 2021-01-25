@@ -13,6 +13,7 @@ const typeDefs = gql`
     password: String!
     phone: String!
     status: Boolean!
+    role: String!
     profile: Profile
     createdAt: DateTime!
   }
@@ -174,7 +175,8 @@ const typeDefs = gql`
           phone: String
           password: String
           isVerified: Boolean
-          status: Boolean
+          status: String
+          rolr: Boolean
           username: String
           firstName: String
           lastName: String

@@ -294,20 +294,24 @@ module.exports = ({
 
     },
     async uploadFile(_, args, { user, models }) {
-        const imageFile = await args.file;
+        return {filename: "",
+            mimetype: "",
+            encoding: "",
+            path: ""}
+        // const imageFile = await args.file;
 
-        const {
-            filename,
-            mimetype,
-            encoding,
-            createReadStream
-        } = await args.file;
+        // const {
+        //     filename,
+        //     mimetype,
+        //     encoding,
+        //     createReadStream
+        // } = await args.file;
 
-        const fileName = `${Math.floor(Date.now() / 1000)}${uniqid('').toUpperCase()}.${imageFile.filename.split('.')[1]}`;
+        // const fileName = `${Math.floor(Date.now() / 1000)}${uniqid('').toUpperCase()}.${imageFile.filename.split('.')[1]}`;
 
-        var target_path = `public/images/${fileName}`;
-        const stream = createReadStream()
-        await stream.pipe(fs.createWriteStream(target_path))
+        // var target_path = `public/images/${fileName}`;
+        // const stream = createReadStream()
+        // await stream.pipe(fs.createWriteStream(target_path))
 
     },
 });

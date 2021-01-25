@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   Post.init({
     title: DataTypes.STRING,
     body: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     tagId: {
