@@ -178,6 +178,7 @@ const typeDefs = gql`
           password: String
           isVerified: Boolean
           status: Boolean
+          visible: Boolean
           role: String
           username: String
           firstName: String
