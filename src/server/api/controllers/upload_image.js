@@ -35,7 +35,7 @@ exports.uploadImage = async (req, res, next) => {
                 { where: { id: conseilId } }
             );
             res.status(200).json({
-                profile: update
+                conseil: update
             });
         } else {
             res.status(404).json({
