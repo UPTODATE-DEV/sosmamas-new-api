@@ -99,7 +99,6 @@ const typeDefs = gql`
     conseilcount: Int!
     postcount: Int!
     periodecount: Int!
-    recentposts: [Post]
   }
 
   type Comment {

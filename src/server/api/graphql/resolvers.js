@@ -176,12 +176,12 @@ const resolvers = {
         async conseilcount(_, __, { models }) {
             return await models.ConseilItem.count()
         },
-        async recentposts(_, __, { models }) {
-            return await models.Post.findAll({
-                offset: 0, limit: 6,
-                order: [['createdAt', 'DESC']],
-            })
-        },
+        // async recentposts(_, __, { models }) {
+        //     return await models.Post.findAll({
+        //         offset: 0, limit: 6,
+        //         order: [['createdAt', 'DESC']],
+        //     })
+        // },
     },
     AuthData: {
         async user(root, args, { models }) {
