@@ -10,9 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      models.Symptome.belongsTo(models.Periode, {
+        onDelete: 'cascade',
+      });
     }
-  };
+  }
   Symptome.init({
     title: DataTypes.STRING,
     name: DataTypes.TEXT,
@@ -24,10 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Symptome',
   });
-  Symptome.associate = (models) => {
-    models.Symptome.belongsTo(models.Periode, {
-      onDelete: 'cascade',
-    });
-  };
+
   return Symptome;
 };

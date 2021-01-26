@@ -82,7 +82,6 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         const post = await models.Post.findOne({ where: { id: id } });
-        console.log(post);
         return post;
     },
     async postResult(_, args, { user, models }) {
@@ -122,5 +121,8 @@ module.exports = ({
             where: { postId: postId },
             order: [['createdAt', 'DESC']]
         })
+    },
+    async showDashboard(_, args, { models }) {
+        return await models.Comment.count()
     },
 })

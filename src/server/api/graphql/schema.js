@@ -93,6 +93,14 @@ const typeDefs = gql`
     hasMore: Boolean!
     posts: [Post]
   }
+  type Dashboard{
+    usercount: Int!
+    symptomecount: Int!
+    conseilcount: Int!
+    postcount: Int!
+    periodecount: Int!
+    recentposts: [Post]
+  }
 
   type Comment {
     id: ID!
@@ -131,6 +139,7 @@ const typeDefs = gql`
     tags: [PostTag!]!
     tag(id: ID!): PostTag!
     comments(postId: ID!): [Comment!]!
+    showDashboard: Dashboard!
   }
 
   type Mutation {

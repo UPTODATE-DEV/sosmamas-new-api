@@ -1,6 +1,6 @@
 const { withFilter } = require('apollo-server-express');
-const TimeAgo  = require('javascript-time-ago');
-const fr  = require('javascript-time-ago/locale/fr');
+const TimeAgo = require('javascript-time-ago');
+const fr = require('javascript-time-ago/locale/fr');
 
 TimeAgo.addLocale(fr)
 TimeAgo.addDefaultLocale(fr)
@@ -42,7 +42,7 @@ const resolvers = {
                     return resourceId === args.resourceId
                 },
             ),
-            resolve: async (payload, args, {connection}) => {
+            resolve: async (payload, args, { connection }) => {
                 console.log(connection)
                 let resource;
                 await payload.resoureLiked.then(function (result) {
@@ -83,12 +83,13 @@ const resolvers = {
     },
     Conseil: {
         async items(root, args, { models }) {
-            
-            return models.ConseilItem.findAll({ where: { 
-                conseilId: root.id,
-                periodeId: args.periodeId
-            } 
-        })
+
+            return models.ConseilItem.findAll({
+                where: {
+                    conseilId: root.id,
+                    periodeId: args.periodeId
+                }
+            })
         }
     },
     Symptome: {
@@ -113,12 +114,12 @@ const resolvers = {
             })
         },
         async commentCount(root, _, { models }) {
-            let count =  await models.Comment.count({ where: { postId: root.id } });
+            let count = await models.Comment.count({ where: { postId: root.id } });
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
             return formatedCout;
         },
         async verifiedcommentCount(root, _, { models }) {
-            let count =  await models.Comment.count({ where: { postId: root.id }, });
+            let count = await models.Comment.count({ where: { postId: root.id }, });
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
             return formatedCout;
         },
@@ -157,6 +158,29 @@ const resolvers = {
     PostTag: {
         async posts(root, args, { user, models }) {
             return models.Post.findAll({ where: { tagId: root.id } })
+        },
+    },
+    Dashboard: {
+        async usercount(_, __, { models }) {
+            return await models.User.count()
+        },
+        async postcount(_, __, { models }) {
+            return await models.Post.count()
+        },
+        async symptomecount(_, __, { models }) {
+            return await models.Symptome.count()
+        },
+        async periodecount(_, __, { models }) {
+            return await models.Periode.count()
+        },
+        async conseilcount(_, __, { models }) {
+            return await models.ConseilItem.count()
+        },
+        async recentposts(_, __, { models }) {
+            return await models.Post.findAll({
+                offset: 0, limit: 6,
+                order: [['createdAt', 'DESC']],
+            })
         },
     },
     AuthData: {
