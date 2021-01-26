@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Symptome.init({
     title: DataTypes.STRING,
-    name: DataTypes.STRING,
+    name: DataTypes.TEXT,
     periodeId: {
       type: DataTypes.INTEGER,
       field: 'periodeId',
