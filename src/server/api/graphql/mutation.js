@@ -176,7 +176,13 @@ module.exports = ({
             const existingUser = await models.User.findOne({ where: { id: args.id } });
             const updatedUser = await existingUser.update(args, { where: { id: args.id } });
             const existingProfile = await models.Profile.findOne({ where: { userId: updatedUser.id, } });
-            await existingProfile.update(args, { where: { userId: updatedUser.id } });
+            if(existingProfile){
+                await existingProfile.update(args, { where: { userId: updatedUser.id } });
+            }else{
+                args.id = null;
+                args.userId = updatedUser.id;
+                await models.Profile.create(args);
+            }
 
             return updatedUser;
         } else {
@@ -184,7 +190,7 @@ module.exports = ({
             if (existingUser) {
                 throw new Error('User exists already.');
             }
-            const user = await models.User.create({
+            const _user = await models.User.create({
                 id: uniqid(''),
                 phone: args.phone,
                 username: `${args.firstName}_${args.lastName || args.name}` + makeid(3),
@@ -199,7 +205,7 @@ module.exports = ({
                 avatar: args.avatar,
                 address: args.address,
             });
-            return user;
+            return _user;
 
         }
         // }

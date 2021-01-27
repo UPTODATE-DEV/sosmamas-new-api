@@ -31,11 +31,6 @@ module.exports = ({
 
         const { limit, offset } = getPagination(args.page, args.size);
         const data = await models.User.findAndCountAll({
-            // where: {
-            //     [Op.or]: {
-            //         phone: { [Op.substring]: args.query || '' } || '',
-            //     }
-            // },
             include: [{
                 model: models.Profile,
                 where: {
