@@ -140,7 +140,7 @@ const typeDefs = gql`
     conseilItems(periodeId: ID, conseilId: ID): [ConseilItem!]!
     symptome(id: ID!): Symptome!
     symptomes(periodeId: ID): [Symptome!]!
-    postResult(page: Int, size: Int, tagId: ID): PostResult!
+    postResult(page: Int, size: Int, tagId: ID, query: String): PostResult!
     users(page: Int, size: Int, query: String): UserResult!
     post(id: ID!): Post!
     tags: [PostTag!]!

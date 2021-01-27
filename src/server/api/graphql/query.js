@@ -115,7 +115,13 @@ module.exports = ({
 
         const { limit, offset } = getPagination(args.page, args.size);
         const data = await models.Post.findAndCountAll({
-            where: { [Op.or]: { tagId: args.tagId || { [Op.ne]: null } } },
+            where: { 
+                [Op.or]: { tagId: args.tagId || { [Op.ne]: null } },
+                [Op.or]: {
+                    title: { [Op.substring]: args.query || '' },
+                    body: { [Op.substring]: args.query || '' }
+                }
+            },
             attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`],
             offset: offset, limit: limit,
             order: [['createdAt', 'DESC']],
