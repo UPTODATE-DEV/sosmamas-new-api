@@ -13,7 +13,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        const data = models.User.findOne({ where: { id: id } });
+        const data = await models.User.findOne({ where: { id: id } });
         if (data) {
             return data;
         } else {

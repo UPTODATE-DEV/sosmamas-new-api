@@ -125,15 +125,15 @@ const resolvers = {
                     required: true,
                     include: [{
                         model: models.Profile,
-                        where:{
+                        where: {
                             isVerified: true
                         },
                     }]
-                    
+
                 },
                 where: { postId: root.id }
             });
-            
+
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
             return formatedCout;
         },
@@ -190,12 +190,6 @@ const resolvers = {
         async conseilcount(_, __, { models }) {
             return await models.ConseilItem.count()
         },
-        // async recentposts(_, __, { models }) {
-        //     return await models.Post.findAll({
-        //         offset: 0, limit: 6,
-        //         order: [['createdAt', 'DESC']],
-        //     })
-        // },
     },
     AuthData: {
         async user(root, args, { models }) {
@@ -204,21 +198,9 @@ const resolvers = {
     },
     User: {
         async profile(root, args, { user, models }) {
-            return await models.Profile.findOne({
-                where: {
-                    userId: root.id,
-                    [Op.or]: {
-                        firstName: { [Op.substring]: args.query || ''},
-                        lastname: { [Op.substring]: args.query || ''},
-                        name: { [Op.substring]: args.query || ''},
-                        gender: { [Op.substring]: args.query || ''},
-                        address: { [Op.substring]: args.query || ''},
-                    }
-                },
-            })
+            return await models.Profile.findOne({ where: { userId: root.id } })
         },
     },
-    // Upload: mutation.GraphQLUpload,
 };
 
 module.exports = resolvers;
