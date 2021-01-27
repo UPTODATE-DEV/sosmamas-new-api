@@ -2,7 +2,7 @@ const sequelize = require('sequelize');
 const Op = sequelize.Op;
 
 const getPagination = (page, size) => {
-    const limit = size ? +size : 6;
+    const limit = size ? +size : 4;
     const offset = page ? page * limit : 0;
 
     return { limit, offset };
@@ -24,16 +24,39 @@ module.exports = ({
         const data = await models.User.findOne({ where: { phone: args.phone } });
         return data === null;
     },
-    async users(_, __, { user, models }) {
+    async users(_, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        const data = models.User.findAll({ order: [['createdAt', 'DESC']] });
-        if (data) {
-            return data;
-        } else {
-            return null;
-        }
+
+        const { limit, offset } = getPagination(args.page, args.size);
+        const data = await models.User.findAndCountAll({
+            // where: {
+            //     [Op.or]: {
+            //         phone: { [Op.substring]: args.query || '' } || '',
+            //     }
+            // },
+            include: [{
+                model: models.Profile,
+                where: {
+                    [Op.or]: {
+                        firstName: { [Op.substring]: args.query || '' },
+                        lastname: { [Op.substring]: args.query || '' },
+                        name: { [Op.substring]: args.query || '' },
+                        gender: { [Op.substring]: args.query || '' },
+                        address: { [Op.substring]: args.query || '' },
+                    }
+                }
+            }],
+            offset: offset, limit: limit,
+            order: [['createdAt', 'DESC']],
+        });
+        const { count: totalItems, rows: users } = data;
+        const currentPage = (args.page ? +args.page : 0) + 1;
+        const totalPages = Math.ceil(totalItems / limit);
+        const hasMore = currentPage < totalPages;
+        const responseData = { totalItems, totalPages, currentPage, hasMore, users };
+        return responseData;
     },
     async periode(_, { id }, { user, models }) {
         if (!user) {
@@ -52,6 +75,7 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         return models.Conseil.findOne({ where: { id: args.id } })
+
     },
     async conseils(_, __, { user, models }) {
         if (!user) {
@@ -88,12 +112,15 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
+
         const { limit, offset } = getPagination(args.page, args.size);
         const data = await models.Post.findAndCountAll({
-            where: { [Op.or]: { tagId: args.tagId || {[Op.ne]: null} } },
+            where: { [Op.or]: { tagId: args.tagId || { [Op.ne]: null } } },
+            attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`],
             offset: offset, limit: limit,
             order: [['createdAt', 'DESC']],
         });
+
         const { count: totalItems, rows: posts } = data;
         const currentPage = (args.page ? +args.page : 0) + 1;
         const totalPages = Math.ceil(totalItems / limit);

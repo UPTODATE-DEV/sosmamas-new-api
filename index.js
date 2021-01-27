@@ -22,13 +22,6 @@ app.use(cors());
 //   // graphqlHTTP({ schema })
 // );
 app.use("/graphql", appRoutes);
-// app.use("/graphql", upload.single('image'), (_, __, next) => {
-//   console.log(_.body)
-//   next()
-// });
-// app.use("/", upload.single('image'), (req, res, next) => {
-//   next()
-// });
 
 apolloServer.applyMiddleware({ app });
 

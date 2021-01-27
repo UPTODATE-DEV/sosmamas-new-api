@@ -8,7 +8,7 @@ module.exports = {
     //   password: "@sos-mamas#Admin",
     //   phone: "+243987654321",
     // });
-    await queryInterface.bulkInsert('Users', [{
+    await queryInterface.bulkInsert('users', [{
       username: 'sos-mamas-admin',
       password: "@sos-mamas#Admin",
       phone: "+243987654321",

@@ -1,6 +1,8 @@
 const { withFilter } = require('apollo-server-express');
 const TimeAgo = require('javascript-time-ago');
 const fr = require('javascript-time-ago/locale/fr');
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
 
 TimeAgo.addLocale(fr)
 TimeAgo.addDefaultLocale(fr)
@@ -10,6 +12,7 @@ const numeral = require('numeral');
 const mutation = require('./mutation');
 const query = require('./query');
 const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
+const { where } = require('sequelize');
 
 const resolvers = {
     Subscription: {
@@ -99,9 +102,6 @@ const resolvers = {
     },
     Post: {
         async author(root, _, { user, models }) {
-            // if (!user) {
-            //     throw new Error('Unauthenticated!');
-            // }
             return models.User.findByPk(root.authorId)
         },
         async tag(root, _, { models }) {
@@ -118,8 +118,22 @@ const resolvers = {
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
             return formatedCout;
         },
-        async verifiedcommentCount(root, _, { models }) {
-            let count = await models.Comment.count({ where: { postId: root.id }, });
+        async verifiedcomment(root, _, { models }) {
+            let count = await models.Comment.count({
+                include: {
+                    model: models.User,
+                    required: true,
+                    include: [{
+                        model: models.Profile,
+                        where:{
+                            isVerified: true
+                        },
+                    }]
+                    
+                },
+                where: { postId: root.id }
+            });
+            
             const formatedCout = numeral(count).format(count < 1000 ? '0a' : '0.0a');
             return formatedCout;
         },
@@ -190,7 +204,18 @@ const resolvers = {
     },
     User: {
         async profile(root, args, { user, models }) {
-            return models.Profile.findOne({ where: { userId: root.id } })
+            return await models.Profile.findOne({
+                where: {
+                    userId: root.id,
+                    [Op.or]: {
+                        firstName: { [Op.substring]: args.query || ''},
+                        lastname: { [Op.substring]: args.query || ''},
+                        name: { [Op.substring]: args.query || ''},
+                        gender: { [Op.substring]: args.query || ''},
+                        address: { [Op.substring]: args.query || ''},
+                    }
+                },
+            })
         },
     },
     // Upload: mutation.GraphQLUpload,

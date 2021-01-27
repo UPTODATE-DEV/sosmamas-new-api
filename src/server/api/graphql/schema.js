@@ -81,7 +81,7 @@ const typeDefs = gql`
     tag: PostTag!
     comments: [Comment!]!
     commentCount: ID!
-    verifiedcommentCount: ID!
+    verifiedcomment: ID!
     likesCount: ID!
     # likeVerifiedCount: Int!
   }
@@ -92,6 +92,13 @@ const typeDefs = gql`
     currentPage: Int!
     hasMore: Boolean!
     posts: [Post]
+  }
+  type UserResult{
+    totalItems: Int!
+    totalPages: Int!
+    currentPage: Int!
+    hasMore: Boolean!
+    users: [User]
   }
   type Dashboard{
     usercount: Int!
@@ -123,7 +130,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    users: [User!]
+    # users: [User!]
     user(id: ID!): User
     phoneVerification(phone: String!): Boolean!
     periode(id: ID!): Periode
@@ -134,6 +141,7 @@ const typeDefs = gql`
     symptome(id: ID!): Symptome!
     symptomes(periodeId: ID): [Symptome!]!
     postResult(page: Int, size: Int, tagId: ID): PostResult!
+    users(page: Int, size: Int, query: String): UserResult!
     post(id: ID!): Post!
     tags: [PostTag!]!
     tag(id: ID!): PostTag!

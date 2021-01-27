@@ -25,12 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     gender: {
       type:DataTypes.STRING,
       isIn: {
-        args: ['M', 'F'],
-        msg: "Le champ sexe doit être M ou F"
-      },
-      len: {
-        args: [0,1],
-        msg: "Le champ sexe ne doit pas depasser 1 caratere"
+        args: ['Homme', 'Femme'],
+        msg: "Le champ sexe doit être Homme ou Femme"
       },
     },
     userId: {

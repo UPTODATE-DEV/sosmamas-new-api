@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'RESTRICT',
         onUpdate: 'RESTRICT'
       });
-      User.hasMany(models.Comment);
+      User.hasMany(models.Comment, { foreignKey: 'authorId' });
       User.hasMany(models.Like);
       User.hasMany(models.Post);
       User.hasOne(models.Profile);
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       notEmpty: true,
     },
     username: {
-      type:DataTypes.STRING,
+      type: DataTypes.STRING,
       // defaultValue: 'sos-user'+this.phone
     },
     status: {
@@ -48,11 +48,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 'Utilisateur'
     },
     password: {
-      type:DataTypes.STRING
+      type: DataTypes.STRING
     }
   }, {
     sequelize,
     modelName: 'User',
-  },);
+  });
   return User;
 };

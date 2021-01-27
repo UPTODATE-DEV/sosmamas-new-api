@@ -24,6 +24,11 @@ const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
+    
+    models.User.associate(models);
+    models.Profile.associate(models);
+    models.Post.associate(models);
+    models.Comment.associate(models);
     if (!req) {
       return { user: null, models }
     }
