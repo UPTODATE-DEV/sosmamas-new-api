@@ -105,7 +105,7 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         if (args.id) {
-            const post = await models.Post.findOne({ where: { id: args.id } });
+            const post = await models.Post.findOne({attributes:[`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`], where: { id: args.id } });
             if (post) {
                 const update = post.update(args, { where: { id: args.id } });
 

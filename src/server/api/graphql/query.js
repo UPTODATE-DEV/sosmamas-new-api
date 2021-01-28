@@ -146,6 +146,7 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         return models.Comment.findAll({
+            attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
             where: { postId: postId },
             order: [['createdAt', 'DESC']]
         })
