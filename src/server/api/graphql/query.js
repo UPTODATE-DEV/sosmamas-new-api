@@ -24,7 +24,7 @@ module.exports = ({
         const data = await models.User.findOne({ where: { phone: args.phone } });
         return data === null;
     },
-    async users(_, args, { user, models }) {
+    async userResult(_, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
@@ -109,13 +109,14 @@ module.exports = ({
         }
 
         const { limit, offset } = getPagination(args.page, args.size);
+        console.log(args);
         const data = await models.Post.findAndCountAll({
             where: { 
                 [Op.or]: { tagId: args.tagId || { [Op.ne]: null } },
-                [Op.or]: {
-                    title: { [Op.substring]: args.query || '' },
-                    body: { [Op.substring]: args.query || '' }
-                }
+                // [Op.or]: {
+                //     title: { [Op.substring]: args.query || '' },
+                //     body: { [Op.substring]: args.query || '' }
+                // }
             },
             attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`],
             offset: offset, limit: limit,
@@ -139,7 +140,8 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.PostTag.findAll()
+        const tags = await models.PostTag.findAll();
+        return tags;
     },
     async comments(_, { postId }, { user, models }) {
         if (!user) {

@@ -105,7 +105,7 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         if (args.id) {
-            const post = await models.Post.findOne({attributes:[`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`], where: { id: args.id } });
+            const post = await models.Post.findOne({ attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`], where: { id: args.id } });
             if (post) {
                 const update = post.update(args, { where: { id: args.id } });
 
@@ -125,11 +125,16 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         if (args.id) {
-            const comment = await models.Comment.findOne({ where: { id: args.id } });
+            const comment = await models.Comment.findOne({
+                attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
+                where: { id: args.id }
+            });
             if (comment) {
-                const update = comment.update(args, { where: { id: args.id } });
+                const update = await comment.update(args, {
+                    where: { id: args.id }
+                });
 
-                pubsub.publish(NEW_POST, { update });
+                pubsub.publish(NEW_COMMENT, { newComment: update });
                 return update;
             } else {
                 throw new Error('Not Fount!');
@@ -176,9 +181,9 @@ module.exports = ({
             const existingUser = await models.User.findOne({ where: { id: args.id } });
             const updatedUser = await existingUser.update(args, { where: { id: args.id } });
             const existingProfile = await models.Profile.findOne({ where: { userId: updatedUser.id, } });
-            if(existingProfile){
+            if (existingProfile) {
                 await existingProfile.update(args, { where: { userId: updatedUser.id } });
-            }else{
+            } else {
                 args.id = null;
                 args.userId = updatedUser.id;
                 await models.Profile.create(args);
@@ -300,10 +305,12 @@ module.exports = ({
 
     },
     async uploadFile(_, args, { user, models }) {
-        return {filename: "",
+        return {
+            filename: "",
             mimetype: "",
             encoding: "",
-            path: ""}
+            path: ""
+        }
         // const imageFile = await args.file;
 
         // const {

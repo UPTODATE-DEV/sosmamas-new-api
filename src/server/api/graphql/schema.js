@@ -141,7 +141,7 @@ const typeDefs = gql`
     symptome(id: ID!): Symptome!
     symptomes(periodeId: ID): [Symptome!]!
     postResult(page: Int, size: Int, tagId: ID, query: String): PostResult!
-    users(page: Int, size: Int, query: String): UserResult!
+    userResult(page: Int, size: Int, query: String): UserResult!
     post(id: ID!): Post!
     tags: [PostTag!]!
     tag(id: ID!): PostTag!
@@ -164,6 +164,7 @@ const typeDefs = gql`
           periodeId: ID!
           title: String!
           body: String!
+          status: Boolean
         ): ConseilItem!
         updateSymptome(
           id: ID
