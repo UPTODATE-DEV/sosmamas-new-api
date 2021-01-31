@@ -1,5 +1,6 @@
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
+const { pubsub, SEARCH_POST } = require('./constants');
 
 const getPagination = (page, size) => {
     const limit = size ? +size : 4;
@@ -109,25 +110,32 @@ module.exports = ({
         }
 
         const { limit, offset } = getPagination(args.page, args.size);
-        console.log(args);
+
         const data = await models.Post.findAndCountAll({
-            where: { 
-                [Op.or]: { tagId: args.tagId || { [Op.ne]: null } },
-                // [Op.or]: {
-                //     title: { [Op.substring]: args.query || '' },
-                //     body: { [Op.substring]: args.query || '' }
-                // }
+            where: {
+                tagId: args.tagId || {
+                    [Op.ne]: null
+                },
+                [Op.or]: {
+                    title: { [Op.substring]: args.query || '' },
+                    body: { [Op.substring]: args.query || '' }
+                },
             },
             attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`],
             offset: offset, limit: limit,
             order: [['createdAt', 'DESC']],
-        });
+        },);
 
         const { count: totalItems, rows: posts } = data;
         const currentPage = (args.page ? +args.page : 0) + 1;
         const totalPages = Math.ceil(totalItems / limit);
         const hasMore = currentPage < totalPages;
         const responseData = { totalItems, totalPages, currentPage, hasMore, posts };
+
+        if (args.query) {
+            pubsub.publish(SEARCH_POST, { postResult: responseData });
+        }
+
         return responseData;
     },
     async tag(_, { id }, { user, models }) {

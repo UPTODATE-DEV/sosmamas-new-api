@@ -11,8 +11,7 @@ const numeral = require('numeral');
 
 const mutation = require('./mutation');
 const query = require('./query');
-const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
-const { where } = require('sequelize');
+const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT, SEARCH_POST } = require('./constants');
 
 const resolvers = {
     Subscription: {
@@ -66,6 +65,16 @@ const resolvers = {
                 },
             ),
             resolve: (payload) => (payload.newComment)
+
+        },
+        searchPost: {
+            subscribe: withFilter(
+                () => pubsub.asyncIterator(SEARCH_POST),
+                async (_, __) => {
+                    return true;
+                },
+            ),
+            resolve: (payload) => (payload.postResult)
 
         },
     },

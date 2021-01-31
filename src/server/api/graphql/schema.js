@@ -233,6 +233,7 @@ const typeDefs = gql`
         newPeriode(periodeId: ID): Periode!
         newPost: Post!
         newComment(postId: ID!): Comment!
+        searchPost: PostResult!
         resourcetLiked(
           resourceId: ID!
           model: String!
