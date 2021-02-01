@@ -119,6 +119,7 @@ const resolvers = {
         async comments(root, _, { models }) {
             return models.Comment.findAll({
                 where: { postId: root.id },
+                attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
                 order: [['createdAt', 'DESC']]
             })
         },
@@ -207,7 +208,10 @@ const resolvers = {
     },
     User: {
         async profile(root, args, { user, models }) {
-            return await models.Profile.findOne({ where: { userId: root.id } })
+            return await models.Profile.findOne({
+                attributes: [`id`, `firstName`, `lastName`, `name`, `gender`, `userId`, `isVerified`, `avatar`, `address`, `createdAt`, `updatedAt`],
+                where: { userId: root.id } 
+            })
         },
     },
 };

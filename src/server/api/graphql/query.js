@@ -34,6 +34,7 @@ module.exports = ({
         const data = await models.User.findAndCountAll({
             include: [{
                 model: models.Profile,
+                required: false,
                 where: {
                     [Op.or]: {
                         firstName: { [Op.substring]: args.query || '' },
@@ -116,6 +117,9 @@ module.exports = ({
                 tagId: args.tagId || {
                     [Op.ne]: null
                 },
+                status: args.status || {
+                    [Op.ne]: null
+                },
                 [Op.or]: {
                     title: { [Op.substring]: args.query || '' },
                     body: { [Op.substring]: args.query || '' }
@@ -151,13 +155,15 @@ module.exports = ({
         const tags = await models.PostTag.findAll();
         return tags;
     },
-    async comments(_, { postId }, { user, models }) {
+    async comments(_, args, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
         return models.Comment.findAll({
             attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
-            where: { postId: postId },
+            where: { postId: args.postId, status: args.status || {
+                [Op.ne]: null
+            },},
             order: [['createdAt', 'DESC']]
         })
     },

@@ -134,18 +134,18 @@ const typeDefs = gql`
     user(id: ID!): User
     phoneVerification(phone: String!): Boolean!
     periode(id: ID!): Periode
-    periodes: [Periode!]!
+    periodes(status: Boolean): [Periode!]!
     conseil(id: ID!): Conseil!
-    conseils: [Conseil!]!
-    conseilItems(periodeId: ID, conseilId: ID): [ConseilItem!]!
+    conseils(status: Boolean): [Conseil!]!
+    conseilItems(periodeId: ID, conseilId: ID, status: Boolean): [ConseilItem!]!
     symptome(id: ID!): Symptome!
     symptomes(periodeId: ID): [Symptome!]!
-    postResult(page: Int, size: Int, tagId: ID, query: String): PostResult!
+    postResult(page: Int, size: Int, tagId: ID, query: String, status: Boolean): PostResult!
     userResult(page: Int, size: Int, query: String): UserResult!
     post(id: ID!): Post!
-    tags: [PostTag!]!
-    tag(id: ID!): PostTag!
-    comments(postId: ID!): [Comment!]!
+    tags(status: Boolean): [PostTag!]!
+    tag(id: ID!, status: Boolean): PostTag!
+    comments(postId: ID!,, status: Boolean): [Comment!]!
     showDashboard: Dashboard!
   }
 

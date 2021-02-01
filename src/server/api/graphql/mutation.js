@@ -229,7 +229,7 @@ module.exports = ({
             const isEqual = await bcrypt.compare(args.password, user.password);
             console.log(isEqual)
             if (!isEqual) {
-                throw new Error('Password is incorrect!');
+                throw new Error('Mot de passe incorrect');
             }
             const token = jwt.sign(
                 { userId: user.id, phone: user.phone, device_id: args.device_id },
@@ -253,7 +253,7 @@ module.exports = ({
 
             return { userId: user.id, token: token, isLoggedIn: true };
         }
-        throw new Error('User doesn\'t exist!');
+        throw new Error('Ce nom d\'utilisateur n\'existe pas');
     },
     async logout(_, args, { user, models }) {
         if (!user) {
