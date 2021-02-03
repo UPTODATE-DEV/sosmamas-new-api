@@ -27,7 +27,7 @@ exports.uploadImage = async (req, res, next) => {
             });
         }
     } else if(resource === 'conseil'){
-        const conseilId = req.body.conseilId;
+        const conseilId = req.body;
         const find = await models.Conseil.findOne({ where: { id: conseilId } },);
         if (find) {
             const update = await find.update(

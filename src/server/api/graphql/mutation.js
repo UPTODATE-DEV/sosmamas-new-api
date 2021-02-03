@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const { pubsub, NEW_PERIODE, NEW_POST, NEW_COMMENT } = require('./constants');
 var uniqid = require('uniqid');
 const bcrypt = require('bcryptjs');
@@ -168,32 +169,50 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
+        if (args.oldPassword) {
+            const userPassword = await models.User.findOne({
+                where: { id: user.userId, phone: args.phone }
+            });
+            
+            if (userPassword) {
+                const isEqual = await bcrypt.compare(args.oldPassword, userPassword.password);
+
+                if (!isEqual) {
+                    throw new Error('Ancien mot de passe incorrect');
+                }
+                const password = await bcrypt.hash(args.password, 12);
+                args.password = password;
+                
+                const newUserPassword = await userPassword.update({ password: password }, {
+                    where: {
+                        phone: args.phone
+                    }
+                })
+                return newUserPassword
+            }
+            throw new Error('Unauthenticated!');
+        }
         let hashedPassword;
         if (args.password) {
             hashedPassword = await bcrypt.hash(args.password, 12);
             args.password = hashedPassword;
         }
-        if (fileName) {
-            args.avatar = fileName;
-        }
-        // if (existingUser) {
         if (args.id) {
             const existingUser = await models.User.findOne({ where: { id: args.id } });
-            const updatedUser = await existingUser.update(args, { where: { id: args.id } });
-            const existingProfile = await models.Profile.findOne({ where: { userId: updatedUser.id, } });
-            if (existingProfile) {
-                await existingProfile.update(args, { where: { userId: updatedUser.id } });
-            } else {
-                args.id = null;
-                args.userId = updatedUser.id;
-                await models.Profile.create(args);
+            if (existingUser) {
+                const updatedUser = await existingUser.update(args, { where: { id: args.id } });
+                const existingProfile = await models.Profile.findOne({ where: { userId: updatedUser.id, } });
+                if (existingProfile) {
+                    args.userId = updatedUser.id;
+                    await existingProfile.update(args, { where: { userId: updatedUser.id } });
+                    return updatedUser;
+                }
             }
 
-            return updatedUser;
         } else {
             const existingUser = await models.User.findOne({ where: { phone: args.phone } });
             if (existingUser) {
-                throw new Error('User exists already.');
+                throw new Error('Ce numéro de téléphone existe déjà');
             }
             const _user = await models.User.create({
                 id: uniqid(''),
@@ -201,21 +220,26 @@ module.exports = ({
                 username: `${args.firstName}_${args.lastName || args.name}` + makeid(3),
                 password: hashedPassword
             });
-            await models.Profile.create({
-                userId: user.id,
-                firstName: args.firstName,
-                lastName: args.lastName,
-                name: args.name,
-                gender: args.gender,
-                avatar: args.avatar,
-                address: args.address,
-            });
+            args.userId = _user.id;
+            await models.Profile.create(args);
             return _user;
-
         }
-        // }
 
-
+    },
+    async otpValidation(_, args, { models }) {
+        const data = await models.OtpVerification.findOne({
+            where: args
+        })
+        console.log(data)
+        if (data) {
+            if (data.isVerifed === 0) {
+                throw new Error('Ce code est déjà utilisé');
+            }
+            const update = await data.update({ isVerifed: false })
+            return update;
+        } else {
+            throw new Error('Ce code ne correspond pas');
+        }
     },
     async login(_, args, { models }) {
         const user = await models.User.findOne({
@@ -227,7 +251,7 @@ module.exports = ({
                 throw new Error('Ce compte est désactivé');
             }
             const isEqual = await bcrypt.compare(args.password, user.password);
-            console.log(isEqual)
+
             if (!isEqual) {
                 throw new Error('Mot de passe incorrect');
             }
@@ -310,5 +334,6 @@ module.exports = ({
             mimetype: "",
             encoding: "",
             path: ""
-        }},
+        }
+    },
 });

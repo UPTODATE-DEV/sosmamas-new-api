@@ -14,6 +14,11 @@ module.exports = {
       name: {
         type: Sequelize.TEXT
       },
+      status: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       periodeId: {
         type: Sequelize.INTEGER,
         references: {

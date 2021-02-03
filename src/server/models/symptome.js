@@ -18,6 +18,11 @@ module.exports = (sequelize, DataTypes) => {
   Symptome.init({
     title: DataTypes.STRING,
     name: DataTypes.TEXT,
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
     periodeId: {
       type: DataTypes.INTEGER,
       field: 'periodeId',

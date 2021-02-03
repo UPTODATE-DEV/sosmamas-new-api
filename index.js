@@ -6,7 +6,7 @@ const cors = require('cors');
 const { createServer } = require('http');
 // const { graphqlUploadExpress } = require('graphql-upload');
 const appRoutes = require('./src/server/router/router');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 4000;
 
@@ -14,7 +14,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'public/uploads')));
 app.use(cors());
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 // app.use(
 //   '/graphql',

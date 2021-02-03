@@ -14,7 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   PostTag.init({
-    name: DataTypes.STRING
+    name: DataTypes.STRING,
+    status: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
   }, {
     sequelize,
     modelName: 'PostTag'

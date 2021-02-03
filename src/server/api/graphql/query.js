@@ -1,6 +1,9 @@
+var axios = require("axios").default;
+
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 const { pubsub, SEARCH_POST } = require('./constants');
+const userController = require('../controllers/user');
 
 const getPagination = (page, size) => {
     const limit = size ? +size : 4;
@@ -23,7 +26,20 @@ module.exports = ({
     },
     async phoneVerification(_, args, { models }) {
         const data = await models.User.findOne({ where: { phone: args.phone } });
-        return data === null;
+        
+            if(args.model.toString().toLowerCase() === 'password'){
+                if(data){
+                    const otpData = await userController.sendVerificationCode(args.phone, models)
+                    return otpData
+                }else{
+                    throw new Error('Ce numéro de téléphone n\'existe pas');
+                }
+            }else{
+                if(data){
+                    throw new Error('Ce numéro de téléphone existe déjà\nVeuillez changer de numéro puis reéssayer');
+                }
+                return await userController.sendVerificationCode(args.phone, models)
+            }
     },
     async userResult(_, args, { user, models }) {
         if (!user) {
@@ -34,7 +50,7 @@ module.exports = ({
         const data = await models.User.findAndCountAll({
             include: [{
                 model: models.Profile,
-                required: false,
+                required: args.query ? true : false,
                 where: {
                     [Op.or]: {
                         firstName: { [Op.substring]: args.query || '' },
@@ -128,7 +144,7 @@ module.exports = ({
             attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`],
             offset: offset, limit: limit,
             order: [['createdAt', 'DESC']],
-        },);
+        });
 
         const { count: totalItems, rows: posts } = data;
         const currentPage = (args.page ? +args.page : 0) + 1;
@@ -161,9 +177,11 @@ module.exports = ({
         }
         return models.Comment.findAll({
             attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
-            where: { postId: args.postId, status: args.status || {
-                [Op.ne]: null
-            },},
+            where: {
+                postId: args.postId, status: args.status || {
+                    [Op.ne]: null
+                },
+            },
             order: [['createdAt', 'DESC']]
         })
     },

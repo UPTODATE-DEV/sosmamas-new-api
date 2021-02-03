@@ -2,6 +2,7 @@ const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
   scalar DateTime
+
   type Periode {
     id: ID!
     name: String!
@@ -61,11 +62,13 @@ const typeDefs = gql`
     title: String!
     name: String!
     periode: Periode!
+    status: Boolean
   }
 
   type PostTag {
     id: ID!
     name: String!
+    status: Boolean
     posts: [Post!]!
   }
 
@@ -107,7 +110,18 @@ const typeDefs = gql`
     postcount: Int!
     periodecount: Int!
   }
+  type OtpVerification{
+    credetial: String
+    phoneNumber: String
+    otpCode: String
+    isVerifed: Boolean
+  }
 
+  type Credetial{
+    credetial: String
+    isVerifed: Boolean
+  }
+ 
   type Comment {
     id: ID!
     content: String!
@@ -132,20 +146,35 @@ const typeDefs = gql`
   type Query {
     # users: [User!]
     user(id: ID!): User
-    phoneVerification(phone: String!): Boolean!
+
+    phoneVerification(phone: String!, model: String!): Credetial
+
     periode(id: ID!): Periode
+
     periodes(status: Boolean): [Periode!]!
+
     conseil(id: ID!): Conseil!
+
     conseils(status: Boolean): [Conseil!]!
+
     conseilItems(periodeId: ID, conseilId: ID, status: Boolean): [ConseilItem!]!
+
     symptome(id: ID!): Symptome!
+
     symptomes(periodeId: ID): [Symptome!]!
+
     postResult(page: Int, size: Int, tagId: ID, query: String, status: Boolean): PostResult!
+
     userResult(page: Int, size: Int, query: String): UserResult!
+
     post(id: ID!): Post!
+
     tags(status: Boolean): [PostTag!]!
+
     tag(id: ID!, status: Boolean): PostTag!
+
     comments(postId: ID!,, status: Boolean): [Comment!]!
+
     showDashboard: Dashboard!
   }
 
@@ -171,6 +200,7 @@ const typeDefs = gql`
           periodeId: ID!
           title: String!
           name: String
+          status: Boolean
         ): Symptome!
         updatePostTag(
           id: ID,
@@ -192,6 +222,7 @@ const typeDefs = gql`
         updateUser(
           id: ID
           phone: String
+          oldPassword: String
           password: String
           isVerified: Boolean
           status: Boolean
@@ -226,6 +257,11 @@ const typeDefs = gql`
           avatar: Upload
           address: String
         ): Profile!
+        otpValidation(
+          credetial: String!
+          phoneNumber: String!
+          otpCode: String!
+        ): OtpVerification!
         uploadFile(file: Upload!): File
     }
 

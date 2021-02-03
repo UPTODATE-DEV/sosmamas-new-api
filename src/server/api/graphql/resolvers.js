@@ -45,7 +45,6 @@ const resolvers = {
                 },
             ),
             resolve: async (payload, args, { connection }) => {
-                console.log(connection)
                 let resource;
                 await payload.resoureLiked.then(function (result) {
                     resource = result.dataValues;
