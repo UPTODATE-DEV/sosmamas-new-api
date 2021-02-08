@@ -13,11 +13,11 @@ const getPagination = (page, size) => {
 };
 
 module.exports = ({
-    async user(_, { id }, { user, models }) {
+    async user(_, { phone }, { user, models }) {
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        const data = await models.User.findOne({ where: { id: id } });
+        const data = await models.User.findOne({ where: { phone: phone } });
         if (data) {
             return data;
         } else {
@@ -78,28 +78,28 @@ module.exports = ({
         return models.Periode.findOne({ where: { id: id } })
     },
     async periodes(_, __, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Periode.findAll()
     },
     async conseil(_, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Conseil.findOne({ where: { id: args.id } })
 
     },
     async conseils(_, __, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Conseil.findAll();
     },
     async conseilItems(_, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.ConseilItem.findAll({ where: args });
     },
     async symptome(_, { id }, { user, models }) {
@@ -109,9 +109,9 @@ module.exports = ({
         return models.Symptome.findOne({ where: { id: id } })
     },
     async symptomes(root, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Symptome.findAll({ where: args })
     },
     async post(_, { id }, { user, models }) {

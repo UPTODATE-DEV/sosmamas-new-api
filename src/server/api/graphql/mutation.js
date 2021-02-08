@@ -166,7 +166,26 @@ module.exports = ({
         });
     },
     async updateUser(_, args, { user, models, fileName }) {
-        if (!user) {
+        if (!user && !args.restore) {
+            throw new Error('Unauthenticated!');
+        }
+        if (args.restore) {
+            console.log(args)
+            const restorePassword = await models.User.findOne({
+                where: { phone: args.phone }
+            });
+            
+            if (restorePassword) {
+                const password = await bcrypt.hash(args.password, 12);
+                args.password = password;
+                
+                const newUserPassword = await restorePassword.update({ password: password }, {
+                    where: {
+                        phone: args.phone
+                    }
+                })
+                return newUserPassword
+            }
             throw new Error('Unauthenticated!');
         }
         if (args.oldPassword) {
@@ -190,7 +209,7 @@ module.exports = ({
                 })
                 return newUserPassword
             }
-            throw new Error('Unauthenticated!');
+            throw new Error('ce compte n\'existe pas!');
         }
         let hashedPassword;
         if (args.password) {
@@ -230,13 +249,13 @@ module.exports = ({
         const data = await models.OtpVerification.findOne({
             where: args
         })
-        console.log(data)
         if (data) {
-            if (data.isVerifed === 0) {
+            if (data.isVerifed === false) {
                 throw new Error('Ce code est déjà utilisé');
             }
-            const update = await data.update({ isVerifed: false })
-            return update;
+            await data.update({ isVerifed: false })
+            const user = await models.User.findOne({ where: { phone: args.phoneNumber } });
+            return user;
         } else {
             throw new Error('Ce code ne correspond pas');
         }

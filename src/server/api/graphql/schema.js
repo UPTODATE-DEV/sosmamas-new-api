@@ -145,7 +145,7 @@ const typeDefs = gql`
 
   type Query {
     # users: [User!]
-    user(id: ID!): User
+    user(phone: String!): User
 
     phoneVerification(phone: String!, model: String!): Credetial
 
@@ -235,6 +235,7 @@ const typeDefs = gql`
           gender: String
           avatar: Upload
           address: String
+          restore: Boolean
         ): User!
         login(
           userID: String!
@@ -261,7 +262,7 @@ const typeDefs = gql`
           credetial: String!
           phoneNumber: String!
           otpCode: String!
-        ): OtpVerification!
+        ): User!
         uploadFile(file: Upload!): File
     }
 
