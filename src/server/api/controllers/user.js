@@ -27,7 +27,7 @@ function makeid(length) {
     return result;
 }
 
-exports.sendVerificationCode = async (phoneNumber, models) => {
+exports.sendVerificationCode = async (phoneNumber) => {
     const confirmationCode = makeid(6);
     var options = {
         method: 'POST',

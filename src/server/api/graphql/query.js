@@ -29,7 +29,7 @@ module.exports = ({
 
         if (args.model.toString().toLowerCase() === 'password') {
             if (data) {
-                const otpData = await userController.sendVerificationCode(args.phone, models)
+                const otpData = await userController.sendVerificationCode(args.phone)
                 return otpData
             } else {
                 throw new Error('Ce numéro de téléphone n\'existe pas');
