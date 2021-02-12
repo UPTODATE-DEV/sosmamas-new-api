@@ -81,11 +81,11 @@ module.exports = ({
         }
         return models.Periode.findOne({ where: { id: id } })
     },
-    async periodes(_, __, { user, models }) {
+    async periodes(_, args, { user, models }) {
         // if (!user) {
         //     throw new Error('Unauthenticated!');
         // }
-        return models.Periode.findAll()
+        return models.Periode.findAll({where: args.status})
     },
     async conseil(_, args, { user, models }) {
         // if (!user) {
@@ -126,9 +126,9 @@ module.exports = ({
         return post;
     },
     async postResult(_, args, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
 
         const { limit, offset } = getPagination(args.page, args.size);
 
@@ -137,9 +137,7 @@ module.exports = ({
                 tagId: args.tagId || {
                     [Op.ne]: null
                 },
-                status: args.status || {
-                    [Op.ne]: null
-                },
+                status: args.status ? args.status : { [Op.ne]: null },
                 [Op.or]: {
                     title: { [Op.substring]: args.query || '' },
                     body: { [Op.substring]: args.query || '' }
