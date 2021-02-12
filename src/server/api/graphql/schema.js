@@ -3,6 +3,12 @@ const { gql } = require('apollo-server-express');
 const typeDefs = gql`
   scalar DateTime
 
+  input WhereInput {
+    id: ID
+    status: Boolean
+    visible: Boolean
+  }
+
   type Periode {
     id: ID!
     name: String!
@@ -165,7 +171,13 @@ const typeDefs = gql`
 
     postResult(page: Int, size: Int, tagId: ID, query: String, status: Boolean): PostResult!
 
-    userResult(page: Int, size: Int, query: String): UserResult!
+    userResult(
+      page: Int,
+      size: Int,
+      query: String,
+      status: Boolean,
+      visible: Boolean
+    ): UserResult!
 
     post(id: ID!): Post!
 

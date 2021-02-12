@@ -26,20 +26,20 @@ module.exports = ({
     },
     async phoneVerification(_, args, { models }) {
         const data = await models.User.findOne({ where: { phone: args.phone } });
-        
-            if(args.model.toString().toLowerCase() === 'password'){
-                if(data){
-                    const otpData = await userController.sendVerificationCode(args.phone, models)
-                    return otpData
-                }else{
-                    throw new Error('Ce numéro de téléphone n\'existe pas');
-                }
-            }else{
-                if(data){
-                    throw new Error('Ce numéro de téléphone existe déjà\nVeuillez changer de numéro puis reéssayer');
-                }
-                return await userController.sendVerificationCode(args.phone, models)
+
+        if (args.model.toString().toLowerCase() === 'password') {
+            if (data) {
+                const otpData = await userController.sendVerificationCode(args.phone, models)
+                return otpData
+            } else {
+                throw new Error('Ce numéro de téléphone n\'existe pas');
             }
+        } else {
+            if (data) {
+                throw new Error('Ce numéro de téléphone existe déjà\nVeuillez changer de numéro puis reéssayer');
+            }
+            return await userController.sendVerificationCode(args.phone, models)
+        }
     },
     async userResult(_, args, { user, models }) {
         if (!user) {
@@ -48,6 +48,10 @@ module.exports = ({
 
         const { limit, offset } = getPagination(args.page, args.size);
         const data = await models.User.findAndCountAll({
+            where: {
+                status: args.status ? args.status : { [Op.ne]: null },
+                visible: args.visible ? args.visible : { [Op.ne]: null },
+            },
             include: [{
                 model: models.Profile,
                 required: args.query ? true : false,

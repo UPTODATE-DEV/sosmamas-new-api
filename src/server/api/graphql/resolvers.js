@@ -2,7 +2,7 @@ const { withFilter } = require('apollo-server-express');
 const TimeAgo = require('javascript-time-ago');
 const fr = require('javascript-time-ago/locale/fr');
 const sequelize = require('sequelize');
-const Op = sequelize.Op;
+// const Op = sequelize.Op;
 
 TimeAgo.addLocale(fr)
 TimeAgo.addDefaultLocale(fr)
