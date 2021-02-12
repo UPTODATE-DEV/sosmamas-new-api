@@ -122,9 +122,9 @@ module.exports = ({
         return post;
     },
     async postResult(_, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
 
         const { limit, offset } = getPagination(args.page, args.size);
 
@@ -165,9 +165,9 @@ module.exports = ({
         return models.PostTag.findOne({ where: { id: id } })
     },
     async tags(_, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         const tags = await models.PostTag.findAll();
         return tags;
     },

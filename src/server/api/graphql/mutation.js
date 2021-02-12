@@ -122,9 +122,9 @@ module.exports = ({
         return newPost;
     },
     async updateComment(_, args, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         if (args.id) {
             const comment = await models.Comment.findOne({
                 attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
@@ -166,9 +166,9 @@ module.exports = ({
         });
     },
     async updateUser(_, args, { user, models, fileName }) {
-        if (!user && !args.restore) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user && !args.restore) {
+        //     throw new Error('Unauthenticated!');
+        // }
         if (args.restore) {
             console.log(args)
             const restorePassword = await models.User.findOne({

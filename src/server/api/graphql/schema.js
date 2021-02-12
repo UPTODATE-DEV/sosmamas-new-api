@@ -262,7 +262,7 @@ const typeDefs = gql`
           credetial: String!
           phoneNumber: String!
           otpCode: String!
-        ): User!
+        ): User
         uploadFile(file: Upload!): File
     }
 
