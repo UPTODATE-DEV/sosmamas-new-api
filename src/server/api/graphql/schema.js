@@ -12,6 +12,7 @@ const typeDefs = gql`
   type Periode {
     id: ID!
     name: String!
+    status: Boolean!
     symptomes: [Symptome]
   }
   type User {
@@ -191,7 +192,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-        updatePeriode(id: ID, name: String!): Periode!
+        updatePeriode(id: ID, name: String!, status: Boolean!): Periode!
         updateConseil(
           id: ID
           title: String!
@@ -217,6 +218,7 @@ const typeDefs = gql`
         updatePostTag(
           id: ID,
           name: String!
+          status: Boolean!
         ): PostTag!
         updatePost(
           id: ID

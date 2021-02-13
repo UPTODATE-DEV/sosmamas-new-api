@@ -107,9 +107,9 @@ module.exports = ({
         return models.ConseilItem.findAll({ where: args });
     },
     async symptome(_, { id }, { user, models }) {
-        if (!user) {
-            throw new Error('Unauthenticated!');
-        }
+        // if (!user) {
+        //     throw new Error('Unauthenticated!');
+        // }
         return models.Symptome.findOne({ where: { id: id } })
     },
     async symptomes(root, args, { user, models }) {
