@@ -82,9 +82,9 @@ module.exports = ({
         return models.Periode.findOne({ where: { id: id } })
     },
     async periodes(_, args, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Periode.findAll({where: args.status})
     },
     async conseil(_, args, { user, models }) {
@@ -95,27 +95,27 @@ module.exports = ({
 
     },
     async conseils(_, __, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Conseil.findAll();
     },
     async conseilItems(_, args, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.ConseilItem.findAll({ where: args });
     },
     async symptome(_, { id }, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Symptome.findOne({ where: { id: id } })
     },
     async symptomes(root, args, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         return models.Symptome.findAll({ where: args })
     },
     async post(_, { id }, { user, models }) {
@@ -167,9 +167,9 @@ module.exports = ({
         return models.PostTag.findOne({ where: { id: id } })
     },
     async tags(_, args, { user, models }) {
-        // if (!user) {
-        //     throw new Error('Unauthenticated!');
-        // }
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
         const tags = await models.PostTag.findAll();
         return tags;
     },
