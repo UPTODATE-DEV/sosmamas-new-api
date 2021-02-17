@@ -174,11 +174,11 @@ module.exports = ({
             const restorePassword = await models.User.findOne({
                 where: { phone: args.phone }
             });
-            
+
             if (restorePassword) {
                 const password = await bcrypt.hash(args.password, 12);
                 args.password = password;
-                
+
                 const newUserPassword = await restorePassword.update({ password: password }, {
                     where: {
                         phone: args.phone
@@ -192,7 +192,7 @@ module.exports = ({
             const userPassword = await models.User.findOne({
                 where: { id: user.userId, phone: args.phone }
             });
-            
+
             if (userPassword) {
                 const isEqual = await bcrypt.compare(args.oldPassword, userPassword.password);
 
@@ -201,7 +201,7 @@ module.exports = ({
                 }
                 const password = await bcrypt.hash(args.password, 12);
                 args.password = password;
-                
+
                 const newUserPassword = await userPassword.update({ password: password }, {
                     where: {
                         phone: args.phone
@@ -261,8 +261,12 @@ module.exports = ({
         }
     },
     async login(_, args, { models }) {
+        const str = '0987654321';
+        if (args.userID.substring(0, 1) === "0") {
+            args.userID = str.substring(1, str.length);
+        }
         const user = await models.User.findOne({
-            where: { [Op.or]: { phone: args.userID, username: args.userID } }
+            where: { [Op.or]: { phone: { [Op.substring]: args.userID }, username: args.userID } }
         });
 
         if (user !== null) {
