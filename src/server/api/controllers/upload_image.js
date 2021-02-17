@@ -2,7 +2,6 @@
 const models = require('../../models');
 
 exports.uploadImage = async (req, res, next) => {
-    console.log(req.body)
     const resource = req.body.resource;
 
     const fileName = req.filename;
@@ -27,7 +26,7 @@ exports.uploadImage = async (req, res, next) => {
             });
         }
     } else if(resource === 'conseil'){
-        const conseilId = req.body;
+        const conseilId = req.body.conseilId;
         const find = await models.Conseil.findOne({ where: { id: conseilId } },);
         if (find) {
             const update = await find.update(
