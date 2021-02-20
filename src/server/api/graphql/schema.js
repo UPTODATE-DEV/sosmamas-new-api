@@ -103,6 +103,14 @@ const typeDefs = gql`
     hasMore: Boolean!
     posts: [Post]
   }
+
+  type CommentResult{
+    totalItems: Int!
+    totalPages: Int!
+    currentPage: Int!
+    hasMore: Boolean!
+    comments: [Comment]
+  }
   type UserResult{
     totalItems: Int!
     totalPages: Int!
@@ -154,7 +162,7 @@ const typeDefs = gql`
     # users: [User!]
     user(phone: String!): User
 
-    phoneVerification(phone: String!, model: String!): Credetial
+    phoneVerification(phone: String!, model: String!, countryCode: String!): Credetial
 
     periode(id: ID!): Periode
 
@@ -171,6 +179,8 @@ const typeDefs = gql`
     symptomes(periodeId: ID): [Symptome!]!
 
     postResult(page: Int, size: Int, tagId: ID, query: String, status: Boolean): PostResult!
+    
+    commentResult(page: Int, size: Int, postId: ID, status: Boolean): CommentResult!
 
     userResult(
       page: Int,

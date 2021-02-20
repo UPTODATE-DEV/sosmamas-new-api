@@ -25,7 +25,13 @@ module.exports = ({
         }
     },
     async phoneVerification(_, args, { models }) {
-        const data = await models.User.findOne({ where: { phone: args.phone } });
+        console.log(args)
+        if (args.phone.substring(0, 1) === "0") {
+            args.phone = args.phone.substring(1, args.phone.length)
+        }
+        args.phone = `${args.countryCode}${args.phone}`
+
+        const data = await models.User.findOne({ where: { phone: { [Op.substring]: args.phone } } });
 
         if (args.model.toString().toLowerCase() === 'password') {
             if (data) {
@@ -38,7 +44,7 @@ module.exports = ({
             if (data) {
                 throw new Error('Ce numéro de téléphone existe déjà\nVeuillez changer de numéro puis reéssayer');
             }
-            return await userController.sendVerificationCode(args.phone, models)
+            return await userController.sendVerificationCode(args.phone)
         }
     },
     async userResult(_, args, { user, models }) {
@@ -85,7 +91,7 @@ module.exports = ({
         if (!user) {
             throw new Error('Unauthenticated!');
         }
-        return models.Periode.findAll({where: args.status})
+        return models.Periode.findAll({ where: args.status })
     },
     async conseil(_, args, { user, models }) {
         // if (!user) {
@@ -186,6 +192,30 @@ module.exports = ({
             },
             order: [['createdAt', 'DESC']]
         })
+    },
+    async commentResult(_, args, { user, models }) {
+        if (!user) {
+            throw new Error('Unauthenticated!');
+        }
+        const { limit, offset } = getPagination(args.page, args.size);
+        const data = await  models.Comment.findAndCountAll({
+            attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
+            where: {
+                postId: args.postId, status: args.status || {
+                    [Op.ne]: null
+                },
+            },
+            offset: offset, limit: limit,
+            order: [['createdAt', 'DESC']]
+        })
+
+        const { count: totalItems, rows: comments } = data;
+        const currentPage = (args.page ? +args.page : 0) + 1;
+        const totalPages = Math.ceil(totalItems / limit);
+        const hasMore = currentPage < totalPages;
+        const responseData = { totalItems, totalPages, currentPage, hasMore, comments };
+
+        return responseData;
     },
     async showDashboard(_, args, { models }) {
         return await models.Comment.count()

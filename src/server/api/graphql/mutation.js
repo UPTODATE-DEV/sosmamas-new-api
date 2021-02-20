@@ -247,14 +247,18 @@ module.exports = ({
     },
     async otpValidation(_, args, { models }) {
         const data = await models.OtpVerification.findOne({
-            where: args
+            where: {
+                phoneNumber:{ [Op.substring]: args.phoneNumber },
+                otpCode: args.otpCode,
+                credetial: args.credetial
+            }
         })
         if (data) {
             if (data.isVerifed === false) {
                 throw new Error('Ce code est déjà utilisé');
             }
             await data.update({ isVerifed: false })
-            const user = await models.User.findOne({ where: { phone: args.phoneNumber } });
+            const user = await models.User.findOne({ where: { phone: { [Op.substring]: args.phoneNumber } } });
             return user;
         } else {
             throw new Error('Ce code ne correspond pas');
