@@ -44,11 +44,12 @@ module.exports = ({
             if (data) {
                 throw new Error('Ce numéro de téléphone existe déjà\nVeuillez changer de numéro puis reéssayer');
             }
-            const otpRes =  await userController.sendVerificationCode(args.phone)
-            if(otpRes['credetial']){
-                return { otpRes }
+            const otpRes = await userController.sendVerificationCode(args.phone)
+            
+            if (otpRes['credetial']) {
+                return otpRes
             }
-            throw new Error('Veuillez vérifier votre numéro de téléphone s\'il vous plait');
+            throw new Error("Veuillez vérifier votre numéro de téléphone s'il vous plait");
         }
     },
     async userResult(_, args, { user, models }) {
@@ -202,7 +203,7 @@ module.exports = ({
             throw new Error('Unauthenticated!');
         }
         const { limit, offset } = getPagination(args.page, args.size);
-        const data = await  models.Comment.findAndCountAll({
+        const data = await models.Comment.findAndCountAll({
             attributes: [`id`, `content`, `userId`, `postId`, `status`, `createdAt`, `updatedAt`],
             where: {
                 postId: args.postId, status: args.status || {

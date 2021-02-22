@@ -167,8 +167,8 @@ const resolvers = {
         },
     },
     Comment: {
-        async post(root, _, { models }) {
-            return models.Post.findByPk(root.postId, {
+        async post(_, args, { models }) {
+            return models.Post.findByPk(args.postId, {
                 attributes: [`id`, `title`, `body`, `tagId`, `authorId`, `status`, `createdAt`, `updatedAt`],
             })
         },

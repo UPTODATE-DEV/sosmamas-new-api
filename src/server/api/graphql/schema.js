@@ -141,7 +141,7 @@ const typeDefs = gql`
     id: ID!
     content: String!
     status: Boolean!
-    post: Post!
+    post(postId: ID): Post
     author: User!
     createdAt: DateTime!
     timeAgo: String!

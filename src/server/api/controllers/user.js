@@ -42,26 +42,38 @@ exports.sendVerificationCode = async (phoneNumber) => {
     }
 
     const data = await axios.request(options).then(function (response) {
-        if(data === '1005'){
-            return {
-                credetial: null,
-                isVerifed: false
-            }
-        }
-        models.OtpVerification.create({
-            credetial: response.data,
-            phoneNumber: phoneNumber,
-            otpCode: confirmationCode
-        });
-        return {
-            credetial: response.data,
-            isVerifed: true
-        }
+        return response.data
     }).catch(function (error) {
         return {
             credetial: null,
             isVerifed: false
         }
     });
-    return data
+
+    if (data === '1005') {
+        return {
+            credetial: null,
+            isVerifed: false
+        }
+    }
+    let verification = await models.OtpVerification.findOne(
+        {
+            where: { phoneNumber: phoneNumber 
+        }});
+    if (verification) {
+        verification = await verification.update({
+            credetial: data,
+            otpCode: confirmationCode
+        });
+    }else{
+        verification = await models.OtpVerification.create({
+            credetial: data,
+            phoneNumber: phoneNumber,
+            otpCode: confirmationCode
+        })
+    }
+    return {
+        credetial: verification['credetial'],
+        isVerifed: true
+    }
 }
