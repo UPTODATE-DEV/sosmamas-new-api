@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     isVerified: {
       type:DataTypes.BOOLEAN,
-      defaultValue: 0
+      defaultValue: false
     },
     avatar: DataTypes.STRING,
     address: DataTypes.STRING

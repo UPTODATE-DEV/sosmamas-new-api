@@ -44,7 +44,11 @@ module.exports = ({
             if (data) {
                 throw new Error('Ce numéro de téléphone existe déjà\nVeuillez changer de numéro puis reéssayer');
             }
-            return await userController.sendVerificationCode(args.phone)
+            const otpRes =  await userController.sendVerificationCode(args.phone)
+            if(otpRes['credetial']){
+                return { otpRes }
+            }
+            throw new Error('Veuillez vérifier votre numéro de téléphone s\'il vous plait');
         }
     },
     async userResult(_, args, { user, models }) {

@@ -42,6 +42,12 @@ exports.sendVerificationCode = async (phoneNumber) => {
     }
 
     const data = await axios.request(options).then(function (response) {
+        if(data === '1005'){
+            return {
+                credetial: null,
+                isVerifed: false
+            }
+        }
         models.OtpVerification.create({
             credetial: response.data,
             phoneNumber: phoneNumber,

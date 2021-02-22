@@ -236,7 +236,7 @@ module.exports = ({
             const _user = await models.User.create({
                 id: uniqid(''),
                 phone: args.phone,
-                username: `${args.firstName}_${args.lastName || args.name}` + makeid(3),
+                username: `${args.firstName}${args.lastName || args.name}` + makeid(3),
                 password: hashedPassword
             });
             args.userId = _user.id;
@@ -265,9 +265,8 @@ module.exports = ({
         }
     },
     async login(_, args, { models }) {
-        const str = '0987654321';
         if (args.userID.substring(0, 1) === "0") {
-            args.userID = str.substring(1, str.length);
+            args.userID = args.userID.substring(1, args.userID.length);
         }
         const user = await models.User.findOne({
             where: { [Op.or]: { phone: { [Op.substring]: args.userID }, username: args.userID } }
