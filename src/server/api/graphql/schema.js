@@ -41,6 +41,7 @@ const typeDefs = gql`
     avatar: String
     gender: String
     address: String
+    speciality: String!
     isVerified: Boolean!
     updatedAt: DateTime!
   }

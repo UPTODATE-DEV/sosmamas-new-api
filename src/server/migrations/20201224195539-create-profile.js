@@ -38,10 +38,14 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
+      speciality: {
+        type: Sequelize.STRING,
+        defaultValue: "Non spécifiée"
+      },
       isVerified: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
-        defaultValue: 0
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,

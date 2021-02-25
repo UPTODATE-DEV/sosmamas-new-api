@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    specialty: {
+    speciality: {
       type: DataTypes.STRING,
       defaultValue: "Non spécifiée"
     },

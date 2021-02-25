@@ -210,7 +210,7 @@ const resolvers = {
     User: {
         async profile(root, args, { user, models }) {
             return await models.Profile.findOne({
-                attributes: [`id`, `firstName`, `lastName`, `name`, `gender`, `userId`, `isVerified`, `avatar`, `address`, `createdAt`, `updatedAt`],
+                attributes: [`id`, `firstName`, `lastName`, `name`, `gender`, `userId`, `isVerified`, `avatar`, `address`, `speciality`, `createdAt`, `updatedAt`],
                 where: { userId: root.id } 
             })
         },
