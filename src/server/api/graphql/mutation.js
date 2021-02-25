@@ -7,8 +7,8 @@ const jwt = require('jsonwebtoken');
 // const axios = require('axios')
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 function makeid(length) {
     var result = '';
@@ -219,7 +219,17 @@ module.exports = ({
         if (args.id) {
             const existingUser = await models.User.findOne({ where: { id: args.id } });
             if (existingUser) {
+
+                if(args.phone){
+                    const existingPhone = await models.User.findOne({ where: { phone: args.phone } });
+                    if(existingPhone){
+                        if(existingPhone.id != args.id){
+                            throw new Error("ce numero a déjà été utilisé par un autre compte.")
+                        }
+                    }
+                }
                 const updatedUser = await existingUser.update(args, { where: { id: args.id } });
+
                 const existingProfile = await models.Profile.findOne({ where: { userId: updatedUser.id, } });
                 if (existingProfile) {
                     args.userId = updatedUser.id;

@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
+    specialty: {
+      type: DataTypes.STRING,
+      defaultValue: "Non spécifiée"
+    },
     isVerified: {
       type:DataTypes.BOOLEAN,
       defaultValue: false
