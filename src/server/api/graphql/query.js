@@ -76,8 +76,9 @@ module.exports = ({
                     }
                 }
             }],
+
             offset: offset, limit: limit,
-            order: [['createdAt', 'DESC']],
+            order: args.visible ? sequelize.literal('rand()') : [['createdAt', 'DESC']],
         });
         const { count: totalItems, rows: users } = data;
         const currentPage = (args.page ? +args.page : 0) + 1;
