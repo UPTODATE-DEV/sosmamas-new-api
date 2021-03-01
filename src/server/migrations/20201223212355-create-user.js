@@ -36,7 +36,7 @@ module.exports = {
         defaultValue: true
       },
       role: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'Utilisateur'
       },
