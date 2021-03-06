@@ -264,7 +264,7 @@ module.exports = ({
             }
         })
         if (data) {
-            if (data.isVerifed === false) {
+            if (data.isVerifed === true) {
                 throw new Error('Ce code est déjà utilisé');
             }
             await data.update({ isVerifed: false })

@@ -37,7 +37,7 @@ exports.sendVerificationCode = async (phoneNumber) => {
             password: 'esm702',
             from: 'SOS-MAMAS',
             to: phoneNumber,
-            text: 'Votre code de confirmartion est: ' + confirmationCode
+            text: 'Votre code de confirmation est: ' + confirmationCode
         },
     }
 
